@@ -4,13 +4,15 @@ Github Action for checking a given PR against a markdown file with checklist rul
 # Requirements
 - OpenAI API Key
 
-# Same usage
+# Sample usage
 On the root of your repo, create a file called pr-rules.md with the following contents:
 
 ```md
 [] all code variables must use snake_case convention
+[] the PR description must be in english
 [] the PR description must specify which tests where performed
 [] no code diff should be more than 100 lines 
+[] the code can't contain literal SQL statements
 ```
 
 then on your repo create a github workflow template like the following:
@@ -39,4 +41,4 @@ jobs:
 
 ```
 
-Now everytime you create a PR on your repo, the action will check it complies to the rules specified on the markdown and write a comment with them checked if succesfull or not. If not valid, below the item there'll be an explanation.
+Now everytime you create a PR on your repo, the action will check it complies to the rules specified on the markdown and write a comment with them checked if successful or not. If not valid, below the item there'll be an explanation.
