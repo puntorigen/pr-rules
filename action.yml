@@ -1,0 +1,24 @@
+name: 'PR-Rules Commenter'
+description: 'Checks the current PR against a specified markdown file with a checklist with rules written in natural language, and uses AI to comment the PR with them.'
+author: 'Pablo Schaffner <pablo@puntorigen.com>'
+inputs:
+  github-token:
+    description: 'GitHub Token to authenticate the action.'
+    required: true
+    default: ${{ github.token }}
+  openai-api-key:
+    description: 'OpenAI API Key to use the GPT-4o model.'
+    required: true
+  file-path:
+    description: 'Path to the markdown rules file to read from the base branch.'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.github-token }}
+    - ${{ inputs.openai-api-key }}
+    - ${{ inputs.file-path }}
+branding:
+  icon: 'git-pull-request'
+  color: 'blue'
