@@ -39,4 +39,4 @@ jobs:
 
 ```
 
-Now everytime you create a PR on your repo, the action will check it complies to the rules specified on the markdown and write a comment with them checked if succesful or not. If not valid, below the item there'll be an explanation.
+Now everytime you create a PR on your repo, the action will check it complies to the rules specified on the markdown and write a comment with them checked if succesfull or not. If not valid, below the item there'll be an explanation.
