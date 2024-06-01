@@ -74,6 +74,10 @@ def post_comment(pr, comment_body):
     except Exception as e:
         print(f"Error posting comment: {e}")
 
+def color_text(text, color):
+    escaped_text = text.replace(" ", "\ ")
+    return f"$\\color{{{color}}}{{{escaped_text}}}$"
+
 def main():
     # Get inputs
     token = sys.argv[1]
@@ -121,18 +125,18 @@ def main():
         print(f"LLM Response received for rule: {item}")
 
         if llm_response.complies:
-            comment_content += f"- [x] $\color{{ForestGreen}}{{{item}}}$\n"
+            comment_content += f"- [x] {color_text(item, 'ForestGreen')}\n"
         else:
-            comment_content += f"- [x] $\color{{Red}}{{{item}}}$\n"
+            comment_content += f"- [x] {color_text(item, 'Red')}\n"
             comment_content += "  - **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
-                comment_content += f"    - **Affected Section:** {reasoning.section}\n"
+                #comment_content += f"    - **Affected Section:** {reasoning.section}\n"
                 if reasoning.file:
                     comment_content += f"    - **Affected File:** {reasoning.file}\n"
                 comment_content += f"    - **Reason:** {reasoning.why_is_not_complying}\n"
                 comment_content += "    - **Suggested Changes:**\n"
                 for change in reasoning.what_should_be_changed:
-                    comment_content += f"      - {change}\n"
+                    comment_content += f"      - {color_text(change, 'Red')}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 
