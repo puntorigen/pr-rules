@@ -3,7 +3,6 @@ import sys
 import re
 from typing import List, Optional, Literal
 from github import Github
-import git
 from openai import OpenAI
 from pydantic import BaseModel, Field
 import instructor
