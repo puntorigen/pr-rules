@@ -12,7 +12,7 @@ class Reasoning(BaseModel):
     section: Literal["title", "description", "file", "other"] = Field(description="Section of the PR that is not complying (title, description, file, or other)")
     file: Optional[str] = Field(description="Affected file by rule, if applicable")
     why_is_not_complying: str = Field(description="Reason why the rule is not valid for this section, you may use markdown to highlight important keywords; only specify why it doesn't comply, without specifying what does comply")
-    what_should_be_changed: List[str] = Field(description="List of instructions for the developer on how to comply with the rule, you may use markdown to highlight important keywords")
+    what_should_be_changed: Optional[List[str]] = Field(description="List of instructions for the developer on how to comply with the rule, you may use markdown to highlight important keywords")
 
 class RulesOutput(BaseModel):
     complies: bool = Field(description="True if the rule is correct, False if the rule is not being complied")
@@ -63,7 +63,8 @@ def build_llm_prompt(pr_title, pr_body, diff, rule):
 
 def get_llm_response(client, prompt):
     response = client.completions.create(
-        model="gpt-4",
+        model="gpt-4o",
+        response_model=RulesOutput,
         messages=[
             {"role": "system", "content": (
                 "# You are an expert PR analyst who has been given the task to check the current PR given context against a given rule. "
@@ -75,7 +76,6 @@ def get_llm_response(client, prompt):
             )},
             {"role": "user", "content": prompt},
         ],
-        response_model=RulesOutput,
         temperature=0.0,
         stream=False
     )
@@ -153,9 +153,10 @@ def main():
                 else:
                     comment_content += f"    - **Affected Section:** {reasoning.section}\n"
                 comment_content += f"    - **Reason:** {reasoning.why_is_not_complying}\n"
-                comment_content += "    - **Suggested Changes:**\n"
-                for change in reasoning.what_should_be_changed:
-                    comment_content += f"      - {change}\n"
+                if reasoning.what_should_be_changed:
+                    comment_content += "    - **Suggested Changes:**\n"
+                    for change in reasoning.what_should_be_changed:
+                        comment_content += f"      - {change}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 
