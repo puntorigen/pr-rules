@@ -160,7 +160,7 @@ def main():
         processed_items_count += 1
 
     # Add remaining unchecked items
-    remaining_items = checklist_items[processed_items_count:]
+    remaining_items = checklist_items[processed_items_count+1:]
     for item in remaining_items:
         comment_content += f"- [ ] {item}\n"
 
