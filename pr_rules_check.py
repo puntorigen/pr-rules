@@ -74,9 +74,13 @@ def post_comment(pr, comment_body):
     except Exception as e:
         print(f"Error posting comment: {e}")
 
+def escape_text(text):
+    # Escape spaces and underscores
+    escaped_text = text.replace(" ", "\ ").replace("_", "\_")
+    return escaped_text
+
 def color_text(text, color):
-    escaped_text = text.replace(" ", "\ ")
-    return f"$\\color{{{color}}}{{{escaped_text}}}$"
+    return f"$\\color{{{color}}}{{{escape_text(text)}}}$"
 
 def main():
     # Get inputs
@@ -130,7 +134,7 @@ def main():
             comment_content += f"- [x] {color_text(item, 'Red')}\n"
             comment_content += "  - **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
-                #comment_content += f"    - **Affected Section:** {reasoning.section}\n"
+                comment_content += f"    - **Affected Section:** {reasoning.section}\n"
                 if reasoning.file:
                     comment_content += f"    - **Affected File:** {reasoning.file}\n"
                 comment_content += f"    - **Reason:** {reasoning.why_is_not_complying}\n"
