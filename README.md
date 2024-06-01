@@ -24,6 +24,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# this is needed for the action to be able to post comments
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+  
 jobs:
   test-action:
     runs-on: ubuntu-latest
