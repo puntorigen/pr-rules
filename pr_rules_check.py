@@ -57,13 +57,14 @@ def build_llm_prompt(pr_title, pr_body, diff, rule):
         "If the rule fails, provide a reason for the failure, never saying that it failed because there was no files or context to apply it for. "
         "Only apply the rule to file comments if the rule mentions it refers specifically to comments, ignore file comments otherwise for the rule test. "
         "List only the non-compliant items, without mentioning the ones that comply. "
-        "Ignore diff indicators like '+', '-', and '@@' when evaluating code."
+        "Ignore diff indicators like '+', '-', and '@@' when evaluating code. "
+        "Avoid suggesting changes that are identical to the non-compliant code."
     )
     return prompt
 
 def get_llm_response(client, prompt):
     response = client.completions.create(
-        model="gpt-4o",
+        model="gpt-4",
         response_model=RulesOutput,
         messages=[
             {"role": "system", "content": (
@@ -72,7 +73,8 @@ def get_llm_response(client, prompt):
                 "List only the non-compliant items, without mentioning the ones that comply. "
                 "Unless a rule is for comments, you should ignore comments on the files of the PR. "
                 "Ensure to avoid redundancy in the output. "
-                "Ignore diff indicators like '+', '-', and '@@' when evaluating code."
+                "Ignore diff indicators like '+', '-', and '@@' when evaluating code. "
+                "Avoid suggesting changes that are identical to the non-compliant code."
             )},
             {"role": "user", "content": prompt},
         ],
