@@ -51,15 +51,28 @@ def build_llm_prompt(pr_title, pr_body, diff, rule):
     if diff:
         prompt += f"Modified Files and Changes:\n{diff}\n\n"
     prompt += f"Rule to Check:\n{rule}\n\n"
-    prompt += "Check the above rule based on the PR title, description, and shown files. If the rule doesn't apply to the given context (for example if it's a rule for variables but no files have variables, you can mark it as if it's a success). If the rule fails, provide a reason for the failure, never saying that it failed because there was no files or context to apply it for. Only apply the rule to file comments if the rule mentions it refers specifically to comments, ignore file comments otherwise for the rule test. List only the non-compliant items, without mentioning the ones that comply."
+    prompt += (
+        "Check the above rule based on the PR title, description, and shown files. "
+        "If the rule doesn't apply to the given context (for example if it's a rule for variables but no files have variables, you can mark it as if it's a success). "
+        "If the rule fails, provide a reason for the failure, never saying that it failed because there was no files or context to apply it for. "
+        "Only apply the rule to file comments if the rule mentions it refers specifically to comments, ignore file comments otherwise for the rule test. "
+        "List only the non-compliant items, without mentioning the ones that comply. "
+        "Ignore diff indicators like '+', '-', and '@@' when evaluating code."
+    )
     return prompt
 
 def get_llm_response(client, prompt):
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        response_model=RulesOutput,
+    response = client.completions.create(
+        model="gpt-4",
         messages=[
-            {"role": "system", "content": "# You are an expert PR analyst who has been given the task to check the current PR given context against a given rule. If the rule doesn't apply to the given context, mark it as a success; if the rule has reasons for failing within the given context, mark it as failed and return the reasoning behind this and an easy to understand but detailed explanation of why it doesn't comply, so the developer can fix the PR to comply with the rule. List only the non-compliant items, without mentioning the ones that comply. Unless a rule is for comments, you should ignore comments on the files of the PR."},
+            {"role": "system", "content": (
+                "# You are an expert PR analyst who has been given the task to check the current PR given context against a given rule. "
+                "If the rule doesn't apply to the given context, mark it as a success; if the rule has reasons for failing within the given context, mark it as failed and return the reasoning behind this and an easy to understand but detailed explanation of why it doesn't comply, so the developer can fix the PR to comply with the rule. "
+                "List only the non-compliant items, without mentioning the ones that comply. "
+                "Unless a rule is for comments, you should ignore comments on the files of the PR. "
+                "Ensure to avoid redundancy in the output. "
+                "Ignore diff indicators like '+', '-', and '@@' when evaluating code."
+            )},
             {"role": "user", "content": prompt},
         ],
         temperature=0.0,
@@ -126,7 +139,7 @@ def main():
         print(f"LLM Prompt built for rule: {item}", prompt)
 
         llm_response = get_llm_response(client_instructor, prompt)
-        print(f"LLM Response received for rule: {item}", llm_response.model_dump_json())
+        print(f"LLM Response received for rule: {item}", llm_response.json())
 
         if llm_response.complies:
             comment_content += f"- ✅ {color_text(item, 'ForestGreen')}\n"
