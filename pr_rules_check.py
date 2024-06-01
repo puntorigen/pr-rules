@@ -121,24 +121,25 @@ def main():
         print(f"LLM Response received for rule: {item}")
 
         if llm_response.complies:
-            comment_content += f"- [x] {item}\n"
+            comment_content += f"- [x] $\color{{ForestGreen}}{{{item}}}$\n"
         else:
-            comment_content += f"- [f] {item}\n"
+            comment_content += f"- [x] $\color{{Red}}{{{item}}}$\n"
+            comment_content += "  - **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
-                comment_content += f"  - Affected Section: {reasoning.section}\n"
+                comment_content += f"    - **Affected Section:** {reasoning.section}\n"
                 if reasoning.file:
-                    comment_content += f"  - Affected File: {reasoning.file}\n"
-                comment_content += f"  - Reason: {reasoning.why_is_not_complying}\n"
-                comment_content += "  - Suggested Changes:\n"
+                    comment_content += f"    - **Affected File:** {reasoning.file}\n"
+                comment_content += f"    - **Reason:** {reasoning.why_is_not_complying}\n"
+                comment_content += "    - **Suggested Changes:**\n"
                 for change in reasoning.what_should_be_changed:
-                    comment_content += f"    - {change}\n"
+                    comment_content += f"      - {change}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 
     # Add remaining unchecked items
     remaining_items = checklist_items[processed_items_count:]
     for item in remaining_items:
-        comment_content += f"- [] {item}\n"
+        comment_content += f"- [ ] {item}\n"
 
     # Post the comment on the PR
     post_comment(pr, comment_content)
