@@ -75,6 +75,7 @@ def get_llm_response(client, prompt):
             )},
             {"role": "user", "content": prompt},
         ],
+        response_model=RulesOutput,
         temperature=0.0,
         stream=False
     )
