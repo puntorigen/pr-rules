@@ -36,7 +36,7 @@ jobs:
         uses: puntorigen/pr-rules@v1.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          openai-apikey: 'your-api-key'
+          openai-api-key: 'your-api-key'
           file-path: 'pr-rules.md'
 
 ```

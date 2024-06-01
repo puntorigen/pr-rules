@@ -1,10 +1,10 @@
 FROM python:3.9-slim
 
 # Install dependencies
-RUN pip install PyGithub gitpython
+RUN pip install PyGithub gitpython github git pydantic instructor
 
 # Copy the action script
-COPY pr_bot.py /pr_bot.py
+COPY pr_rules_check.py /pr_rules_check.py
 
 # Set the entrypoint to the script
-ENTRYPOINT ["python", "/pr_bot.py"]
+ENTRYPOINT ["python", "/pr_rules_check.py"]

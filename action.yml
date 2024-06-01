@@ -10,7 +10,7 @@ inputs:
     description: 'OpenAI API Key to use the GPT-4o model.'
     required: true
   file-path:
-    description: 'Path to the markdown rules file to read from the base branch.'
+    description: 'Path to the markdown rules file.'
     required: true
 runs:
   using: 'docker'
