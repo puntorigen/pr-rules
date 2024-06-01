@@ -153,5 +153,9 @@ def main():
     # Post the comment on the PR
     post_comment(pr, comment_content)
 
+    # Fail the action if any rule check failed
+    if not llm_response.complies:
+        sys.exit(1)
+
 if __name__ == "__main__":
     main()
