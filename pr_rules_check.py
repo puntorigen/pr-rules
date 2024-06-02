@@ -98,9 +98,9 @@ def main():
         print(f"LLM Crew Response received for rule: {rule}", llm_response)
 
         if llm_response.complies:
-            comment_content += f"- ✅ {color_text(rule, 'ForestGreen')}\n"
+            comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} (score: {llm_response.score}/100)\n"
         else:
-            comment_content += f"- ❌ {color_text(rule, 'Red')}\n"
+            comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
             comment_content += "  - **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
                 if reasoning.file:
@@ -113,8 +113,9 @@ def main():
                     for change in reasoning.what_should_be_changed:
                         comment_content += f"      - {change}\n"
                 if reasoning.example_fix:
-                    comment_content += f"    - **Example Fix:**\n"
-                    comment_content += f"      - {reasoning.example_fix}\n"
+                    comment_content += f"    - **Example Code Improvements:**\n"
+                    for fix in reasoning.example_fix:
+                        comment_content += f"      - {fix}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 
