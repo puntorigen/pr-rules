@@ -28,7 +28,7 @@ def validate_rule(PR: PRSchema, rule: str):
 
     if is_valid.is_relevant == False:
         print("Rule is not relevant to the PR context")
-        return RulesOutput(complies=True,affected_sections=None)
+        return RulesOutput(complies=True,affected_sections=None,score=100)
         #return { "is_relevant": False } # Rule is not relevant to the PR
 
     print("Rule seems valid for PR context, proceeding with the rest of the tasks")
