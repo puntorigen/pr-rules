@@ -47,7 +47,7 @@ def validate_rule(PR: PRSchema, rule: str):
         tasks=[
             check_compliance, verify_assessment, generate_feedback
         ],
-        manager_llm=ChatOpenAI(temperature=0, model="gpt-4o"),
+        manager_llm=ChatOpenAI(temperature=0, model="gpt-4"),
         process=Process.hierarchical,
         memory=True
     )
