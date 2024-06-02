@@ -40,7 +40,7 @@ def post_comment(pr, comment_body):
 
 def escape_text(text):
     # Enclose spaces and underscores in braces
-    escaped_text = text.replace(" ", "\ ").replace("_", "\_")
+    escaped_text = text.replace(" ", r"\ ").replace("_", r"\_")
     return escaped_text
 
 def color_text(text, color):

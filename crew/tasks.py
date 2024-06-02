@@ -26,7 +26,7 @@ class Reasoning(BaseModel):
 
 class RulesOutput(BaseModel):
     complies: bool = Field(description="True if the rule is correct, False if the rule is not being complied")
-    affected_sections: Optional[List[Reasoning]] = Field(description="If the rule doesn't comply, indicates the affected sections and the reason for non-compliance")
+    affected_sections: Optional[List[Reasoning]] = Field(description="If the rule doesn't comply, indicates the affected sections and the reason for non-compliance regarding only the specified rule.")
 
 # task definitions
 class Tasks():
@@ -81,10 +81,10 @@ class Tasks():
             description=dedent(f"""\
                 {self.pr_str}
 
-                Verify the assessment of the Compliance Specialist for the rule: '{self.rule}'
+                Verify the assessment of the Compliance Specialist only for the rule: '{self.rule}'
             """),
             expected_output=dedent("""\
-                Verified compliance status and refined assessment for given rule.
+                Verified compliance status and refined assessment only for the given rule regarding the PR and nothing else.
             """),
             async_execution=False,
             agent=agent
@@ -97,11 +97,11 @@ class Tasks():
                 {self.pr_str}
 
                 # Compile the verified assessments into a comprehensive feedback report.
-                # Ensure the feedback is clear, actionable, and provides value to the PR submitter.     
+                # Ensure the feedback is clear, actionable, and provides value to the PR submitter regarding specifically to the rule: '{self.rule}'    
             """),
             output_pydantic=RulesOutput,
-            expected_output=dedent("""\
-                A detailed document summarizing the compliance check process, the final compliance status, and actionable feedback.
+            expected_output=dedent(f"""\
+                A detailed document summarizing the compliance check process, the final compliance status, and actionable feedback for the rule: '{self.rule}'.
             """),
             async_execution=False,
             agent=agent
