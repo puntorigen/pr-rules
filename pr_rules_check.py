@@ -54,6 +54,7 @@ def main():
 
     # set openai api key on env
     os.environ["OPENAI_API_KEY"] = openai_api_key
+    os.environ["OPENAI_MODEL_NAME"] = "gpt-4o"
 
     # GitHub repository details from environment variables
     repository = os.getenv('GITHUB_REPOSITORY')
