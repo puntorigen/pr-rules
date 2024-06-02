@@ -53,7 +53,7 @@ class Experts():
             ],
             "database": [
                 Agent(
-                    role='SQL Database Expert',
+                    role='SQL Expert',
                     goal='Provides opinions on SQL database-specific code regarding the requested rule.',
                     tools=[
                         #add python knowledge from somewhere
@@ -61,10 +61,10 @@ class Experts():
                         #RagTool.add('')
                     ],
                     backstory=dedent("""\
-                        A SQL database expert with a deep understanding of SQL-specific language terminology and
-                        best practices, capable of providing detailed feedback on SQL syntax and planned execution, focused on the requested rule we are checking.
+                        A SQL expert with a deep understanding of SQL-specific language terminology, syntax and
+                        best practices, capable of providing detailed feedback on SQL, focused on the requested rule we are checking.
                     """),
-                    allow_delegation=True,
+                    allow_delegation=False,
                     #verbose=True
                 )
             ]
@@ -86,11 +86,12 @@ class Experts():
     def feedback_agent(self):
         return Agent(
             role='Feedback Agent',
-            goal='Generates a detailed feedback report based on the assessments for the specified rule.',
+            goal='Generates a detailed feedback report based on the assessments for the specified rule. You query info to specialized experts if needed, always in regards to the requested rule and nothing else, for writting a better report.',
             tools=[],
             backstory=dedent("""\
                 A communication expert who translates technical assessments into clear, 
                 actionable feedback, that is easily understood by junior engineers.
             """),
+            allow_delegation=True,
             #verbose=True
         )

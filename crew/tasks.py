@@ -23,7 +23,8 @@ class Reasoning(BaseModel):
     file: Optional[str] = Field(description="Affected file by rule, if applicable")
     why_is_not_complying: str = Field(description="Reason why the rule is not valid for this section, you may use markdown to highlight important keywords; only specify why it doesn't comply, without specifying what does comply, and don't repeat the rule on the reasoning.")
     what_should_be_changed: Optional[List[str]] = Field(description="List of instructions for the developer on how to comply with the rule, you may use markdown to highlight important keywords")
-    example_fix: Optional[str] = Field(description="Example of how the section should be fixed to comply with the rule, you may use markdown to highlight important keywords")
+    score: int = Field(description="Score of the section adherence to the rule, from 0 (bad) to 100 (perfect)")
+    example_fix: str = Field(description="Example of how the section should be fixed to comply with the rule, you may use markdown to highlight important keywords")
 
 class RulesOutput(BaseModel):
     complies: bool = Field(description="True if the rule is correct, False if the rule is not being complied")
