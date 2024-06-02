@@ -46,9 +46,11 @@ def escape_text(text):
 def color_text(text, color):
     return f"$\\color{{{color}}}{{{escape_text(text)}}}$"
 
-def animated_text(text,fontsize=13,hex_color="14A901"):
-    escaped_text = text.replace(" ",r"+")
-    return f"[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size={fontsize}&pause=1000&color={hex_color}&random=false&lines={escaped_text})](https://git.io/typing-svg)"
+def animated_rule(type="success",rule="",score=100,speed=3000):
+    escaped_text = rule.replace(" ",r"+")
+    if type == "success":
+        return f"[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=00B60A&random=false&repeat=false&width=500&lines=-+%E2%9C%85+{escaped_text}+(score+{score}%2F100))](https://git.io/typing-svg)"
+    return f"[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=FF0000&repeat=false&random=false&width=500&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://git.io/typing-svg)"
 
 def main():
     # Get inputs
@@ -102,24 +104,26 @@ def main():
         print(f"LLM Crew Response received for rule: {rule}", llm_response)
 
         if llm_response.complies:
-            comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} {animated_text(f'(score: {llm_response.score}/100)')}\n"
+            #comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} (score: {llm_response.score}/100)\n"
+            comment_content += animated_rule("success",rule,llm_response.score,3000)
         else:
-            comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
-            comment_content += "  - **Reason for failure:**\n"
+            comment_content += animated_rule("failure",rule,llm_response.score,3000)
+            #comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
+            comment_content += "- **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
                 if reasoning.file:
-                    comment_content += f"    - **Affected File:** {reasoning.file}\n"
+                    comment_content += f"  - **Affected File:** {reasoning.file}\n"
                 else:
-                    comment_content += f"    - **Affected Section:** {reasoning.section}\n"
-                comment_content += f"    - **Reason:** {reasoning.why_is_not_complying}\n"
+                    comment_content += f"  - **Affected Section:** {reasoning.section}\n"
+                comment_content += f"  - **Reason:** {reasoning.why_is_not_complying}\n"
                 if reasoning.what_should_be_changed:
-                    comment_content += "    - **Suggested Changes:**\n"
+                    comment_content += "  - **Suggested Changes:**\n"
                     for change in reasoning.what_should_be_changed:
-                        comment_content += f"      - {change}\n"
-                if reasoning.example_fix:
-                    comment_content += f"    - **Example Code Improvements:**\n"
-                    for fix in reasoning.example_fix:
-                        comment_content += f"      - {fix}\n"
+                        comment_content += f"    - {change}\n"
+                #if reasoning.example_fix:
+                #    comment_content += f"  - **Example Code Improvements:**\n"
+                #    for fix in reasoning.example_fix:
+                #        comment_content += f"    - {fix}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 
