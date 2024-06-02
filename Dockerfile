@@ -1,7 +1,9 @@
 FROM python:3.12.2-slim
 
-# Install git
-RUN apt-get update && apt-get install -y git
+# Install git and build dependencies (required for crewai[tools])
+RUN apt-get update && \
+    apt-get install -y git gcc g++ make && \
+    apt-get clean
 
 # Install Python dependencies
 RUN pip install --no-cache-dir PyGithub gitpython pydantic openai crewai crewai[tools]
