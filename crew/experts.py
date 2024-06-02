@@ -28,7 +28,7 @@ class Experts():
                 A meticulous professional with deep knowledge of coding standards 
                 and best practices, capable of identifying nuances in compliance about the requested rule."""),
             allow_delegation=True, # can delegate tasks to specialized experts
-            verbose=True
+            #verbose=True
         )
 
     def specialized_experts(self):
@@ -48,7 +48,24 @@ class Experts():
                         best practices, capable of providing detailed feedback on Python code, focused on the requested rule we are checking.
                     """),
                     allow_delegation=True,
-                    verbose=True
+                    #verbose=True
+                )
+            ],
+            "database": [
+                Agent(
+                    role='SQL Database Expert',
+                    goal='Provides opinions on SQL database-specific code regarding the requested rule.',
+                    tools=[
+                        #add python knowledge from somewhere
+                        #RagTool.add('https://www.python.org/')
+                        #RagTool.add('')
+                    ],
+                    backstory=dedent("""\
+                        A SQL database expert with a deep understanding of SQL-specific language terminology and
+                        best practices, capable of providing detailed feedback on SQL syntax and planned execution, focused on the requested rule we are checking.
+                    """),
+                    allow_delegation=True,
+                    #verbose=True
                 )
             ]
         }
@@ -62,7 +79,7 @@ class Experts():
             backstory=dedent("""\
                 An experienced reviewer with a background in code review and 
                 quality assurance, ensuring that compliance checks are correctly applied for the requested rule."""),
-            verbose=True,
+            #verbose=True,
             allow_delegation=False # Reviewer can delegate tasks to specialized experts
         )
 
@@ -72,7 +89,8 @@ class Experts():
             goal='Generates a detailed feedback report based on the assessments for the specified rule.',
             tools=[],
             backstory=dedent("""\
-                A communication expert who translates technical assessments 
-                into clear, actionable feedback, that is easy to understand by junior engineers."""),
-            verbose=True
+                A communication expert who translates technical assessments into clear, 
+                actionable feedback, that is easily understood by junior engineers.
+            """),
+            #verbose=True
         )

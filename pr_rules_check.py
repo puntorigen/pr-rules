@@ -111,6 +111,9 @@ def main():
                     comment_content += "    - **Suggested Changes:**\n"
                     for change in reasoning.what_should_be_changed:
                         comment_content += f"      - {change}\n"
+                if reasoning.example_fix:
+                    comment_content += f"    - **Example Fix:**\n"
+                    comment_content += f"      - {reasoning.reasoning.example_fix}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 

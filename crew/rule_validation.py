@@ -41,7 +41,7 @@ def validate_rule(PR: PRSchema, rule: str):
     print("executing review crew for rule: "+rule)
     crew = Crew(
         agents=[ # include available specialiazied experts here as well
-            compliance_specialist, *specialized_experts["coding"],
+            compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],
             review_agent, feedback_agent
         ], 
         tasks=[
