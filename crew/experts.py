@@ -22,7 +22,7 @@ class Experts():
     def compliance_specialist(self):
         return Agent(
             role='Compliance Specialist',
-            goal='Oversees compliance checks and delegates to specialized experts if needed.',
+            goal='Oversees compliance checks and delegates to specialized experts if needed, always paying special focus to the defined rule, ignoring other comments that are not related.',
             tools=[],
             backstory=dedent("""\
                 A meticulous professional with deep knowledge of coding standards 
