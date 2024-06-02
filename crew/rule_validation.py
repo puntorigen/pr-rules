@@ -1,7 +1,7 @@
 # Defines a 'Team of Experts & Tasks' for validating a given PR against a given rule
 from crewai import Crew
 from crew.experts import Experts
-from crew.tasks import Tasks, PRSchema
+from crew.tasks import Tasks, PRSchema, RulesOutput
 
 def validate_rule(PR: PRSchema, rule: str):
     # Define the team
@@ -27,7 +27,8 @@ def validate_rule(PR: PRSchema, rule: str):
 
     if is_valid.is_relevant == False:
         print("Rule is not relevant to the PR context")
-        return { "is_relevant": False } # Rule is not relevant to the PR
+        return RulesOutput(complies=True)
+        #return { "is_relevant": False } # Rule is not relevant to the PR
 
     print("Rule seems valid for PR context, proceeding with the rest of the tasks")
     # define the rest of the tasks
