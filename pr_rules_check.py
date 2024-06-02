@@ -113,7 +113,7 @@ def main():
                         comment_content += f"      - {change}\n"
                 if reasoning.example_fix:
                     comment_content += f"    - **Example Fix:**\n"
-                    comment_content += f"      - {reasoning.reasoning.example_fix}\n"
+                    comment_content += f"      - {reasoning.example_fix}\n"
             break  # Stop processing further rules on failure
         processed_items_count += 1
 
