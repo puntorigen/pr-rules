@@ -46,6 +46,10 @@ def escape_text(text):
 def color_text(text, color):
     return f"$\\color{{{color}}}{{{escape_text(text)}}}$"
 
+def animated_text(text,fontsize=13,hex_color="14A901"):
+    escaped_text = text.replace(" ",r"+")
+    return f"[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size={fontsize}&pause=1000&color={hex_color}&random=false&lines={escaped_text})](https://git.io/typing-svg)"
+
 def main():
     # Get inputs
     token = sys.argv[1]
@@ -54,7 +58,7 @@ def main():
 
     # set openai api key on env
     os.environ["OPENAI_API_KEY"] = openai_api_key
-    os.environ["OPENAI_MODEL_NAME"] = "gpt-4o"
+    os.environ["OPENAI_MODEL_NAME"] = "gpt-4" # the best model for this task
 
     # GitHub repository details from environment variables
     repository = os.getenv('GITHUB_REPOSITORY')
@@ -98,7 +102,7 @@ def main():
         print(f"LLM Crew Response received for rule: {rule}", llm_response)
 
         if llm_response.complies:
-            comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} (score: {llm_response.score}/100)\n"
+            comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} {animated_text(f'(score: {llm_response.score}/100)')}\n"
         else:
             comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
             comment_content += "  - **Reason for failure:**\n"
