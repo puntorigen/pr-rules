@@ -1,7 +1,8 @@
 # Defines a 'Team of Experts & Tasks' for validating a given PR against a given rule
-from crewai import Crew
+from crewai import Crew, Process
 from crew.experts import Experts
 from crew.tasks import Tasks, PRSchema, RulesOutput
+from langchain_openai import ChatOpenAI
 
 def validate_rule(PR: PRSchema, rule: str):
     # Define the team
@@ -27,7 +28,7 @@ def validate_rule(PR: PRSchema, rule: str):
 
     if is_valid.is_relevant == False:
         print("Rule is not relevant to the PR context")
-        return RulesOutput(complies=True)
+        return RulesOutput(complies=True,affected_sections=None)
         #return { "is_relevant": False } # Rule is not relevant to the PR
 
     print("Rule seems valid for PR context, proceeding with the rest of the tasks")
@@ -45,6 +46,9 @@ def validate_rule(PR: PRSchema, rule: str):
         ], 
         tasks=[
             check_compliance, verify_assessment, generate_feedback
-        ]
+        ],
+        manager_llm=ChatOpenAI(temperature=0, model="gpt-4o"),
+        process=Process.hierarchical,
+        memory=True
     )
     return crew.kickoff()

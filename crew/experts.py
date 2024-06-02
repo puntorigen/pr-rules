@@ -22,11 +22,11 @@ class Experts():
     def compliance_specialist(self):
         return Agent(
             role='Compliance Specialist',
-            goal='Oversees compliance checks and delegates to specialized experts if needed, always paying special focus to the defined rule, ignoring other comments that are not related.',
+            goal='Oversees compliance checks and delegates to specialized experts if needed, always paying special focus to the defined rule, ignoring other comments that are not related to the specified rule.',
             tools=[],
             backstory=dedent("""\
                 A meticulous professional with deep knowledge of coding standards 
-                and best practices, capable of identifying nuances in compliance."""),
+                and best practices, capable of identifying nuances in compliance about the requested rule."""),
             allow_delegation=True, # can delegate tasks to specialized experts
             verbose=True
         )
@@ -37,14 +37,15 @@ class Experts():
             "coding": [
                 Agent(
                     role='Python Expert',
-                    goal='Provides opinions on Python-specific rules.',
+                    goal='Provides opinions on Python-specific code regarding the requested rule.',
                     tools=[
                         #add python knowledge from somewhere
                         #RagTool.add('https://www.python.org/')
                         #RagTool.add('')
                     ],
                     backstory=dedent("""\
-                        A Python expert with a deep understanding of Python-specific rules
+                        A Python expert with a deep understanding of Python-specific language terminology and 
+                        best practices, capable of providing detailed feedback on Python code, focused on the requested rule we are checking.
                     """),
                     allow_delegation=True,
                     verbose=True
@@ -55,22 +56,23 @@ class Experts():
     def review_agent(self):
         return Agent(
             role='Review Agent',
-            goal='Verifies the accuracy of the Compliance Specialist’s assessment, consulting with specialized experts if needed.',
+            #goal='Verifies the accuracy of the Compliance Specialist’s assessment, consulting with specialized experts if needed, always in regards to the requested rule and nothing else.',
+            goal='Verifies the accuracy of the Compliance Specialist’s assessment, always in regards to the requested rule and nothing else.',
             tools=[],
             backstory=dedent("""\
                 An experienced reviewer with a background in code review and 
-                quality assurance, ensuring that compliance checks are correctly applied."""),
+                quality assurance, ensuring that compliance checks are correctly applied for the requested rule."""),
             verbose=True,
-            allow_delegation=True # Reviewer can delegate tasks to specialized experts
+            allow_delegation=False # Reviewer can delegate tasks to specialized experts
         )
 
     def feedback_agent(self):
         return Agent(
             role='Feedback Agent',
-            goal='Generates a detailed feedback report based on the assessments.',
+            goal='Generates a detailed feedback report based on the assessments for the specified rule.',
             tools=[],
             backstory=dedent("""\
                 A communication expert who translates technical assessments 
-                into clear, actionable feedback."""),
+                into clear, actionable feedback, that is easy to understand by junior engineers."""),
             verbose=True
         )
