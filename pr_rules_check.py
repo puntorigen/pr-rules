@@ -50,6 +50,8 @@ def animated_rule(type="success",rule="",score=100,speed=3000):
     escaped_text = rule.replace(" ",r"+")
     if type == "success":
         return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=00B60A&random=false&repeat=false&width=550&height=18&lines=-+%E2%9C%85+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
+    if type == "pending":
+        return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=97AEB8&random=false&repeat=false&width=550&height=18&lines=-+%F0%9F%95%92+{escaped_text})](https://github.com/puntorigen/pr-rules)"
     return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1500&color=FF0000&repeat=true&random=false&width=550&height=18&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
 
 def main():
@@ -129,8 +131,9 @@ def main():
 
     # Add remaining unchecked items
     remaining_items = checklist_items[processed_items_count+1:]
-    for item in remaining_items:
-        comment_content += f"- [ ] {item}\n"
+    for rule in remaining_items:
+        comment_content += animated_rule("pending",rule,100,3000) + "\n"
+        #comment_content += f"- [ ] {rule}\n"
 
     # Post the comment on the PR
     post_comment(pr, comment_content)
