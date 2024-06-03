@@ -1,5 +1,5 @@
-name: 'PR-Rules Commenter'
-description: 'Checks the current PR against a specified markdown file with a checklist with rules written in natural language, and uses AI to comment the PR with them.'
+name: 'PR-Rules-Checker'
+description: 'Automate PR checks with AI: validate against markdown rules and get instant feedback.'
 author: 'Pablo Schaffner <pablo@puntorigen.com>'
 inputs:
   github-token:
