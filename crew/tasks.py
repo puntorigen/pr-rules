@@ -99,12 +99,14 @@ class Tasks():
                 {self.pr_str}
 
                 # Compile the verified assessments into a comprehensive feedback report.
+                # Never change the given rule validation from the previous agents.
                 # Ensure the feedback is clear, actionable, and provides value to the PR submitter in specific regards to how the rule '{self.rule}' doesn't comply and nothing else.
                 # It's critical that your output is focused only on the requested rule and nothing else.     
             """),
             output_pydantic=RulesOutput,
             expected_output=dedent(f"""\
                 A detailed document summarizing the compliance check process for the given rule of '{self.rule}', the final compliance status, with actionable feedback that a junior engineer can easily understand and apply.
+                Never change the given rule assestment from the previous agents, even if it can be improved. If it's valid, it's valid, if not, it isn't, but say that even if it's valid it should be different.
             """),
             async_execution=False,
             agent=agent
