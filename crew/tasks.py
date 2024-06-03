@@ -20,9 +20,9 @@ class RuleValidity(BaseModel):
 
 class Reasoning(BaseModel):
     section: Literal["title", "description", "file", "other"] = Field(description="Section of the PR that is not complying (title, description, file, or other)")
-    file: Optional[str] = Field(description="Affected file by rule, if applicable")
+    file: Optional[str] = Field(description="Affected filename by rule, if applicable")
     why_is_not_complying: str = Field(description="Reason why the rule is not valid for this section, you may use markdown to highlight important keywords; only specify why it doesn't comply, without specifying what does comply, and don't repeat the rule on the reasoning.")
-    what_should_be_changed: Optional[List[str]] = Field(description="List of instructions for the developer on how to comply with the rule, using best practices regarding the specified rule only and no other recommendations not related to the rule. You may use markdown syntax for bold syntax and markdown code-blocks for examples.")
+    what_should_be_changed: Optional[List[str]] = Field(description="List of instructions for the developer on how to comply with the rule, using best practices regarding the specified rule only and no other recommendations not related to the rule. Provide an example of a valid way to comply with the rule, wrapping it on a markdown code-block. You may use markdown syntax for bold syntax and markdown code-blocks for examples.")
     #example_fix: List[str] = Field(description="Upto two examples on how the section should be fixed to comply with the rule, so a junior engineer understands how to fix it")
 
 class RulesOutput(BaseModel):
@@ -105,8 +105,8 @@ class Tasks():
             """),
             output_pydantic=RulesOutput,
             expected_output=dedent(f"""\
-                A detailed document summarizing the compliance check process for the given rule of '{self.rule}', the final compliance status, with actionable feedback that a junior engineer can easily understand and apply.
-                Never change the given rule assestment from the previous agents, even if it can be improved. If it's valid, it's valid, if not, it isn't, but say that even if it's valid it should be different.
+                A detailed document summarizing the compliance check process for the given rule of '{self.rule}', which files are related, the final compliance status, with actionable feedback that a junior engineer can easily understand and apply, with an example fix or hint.
+                Never change the given rule assestment from the previous agents, even if it can be improved. If it's valid, it's valid, if not, it isn't, but never say that even if it's valid it should be different.
             """),
             async_execution=False,
             agent=agent

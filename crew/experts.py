@@ -95,7 +95,7 @@ class Experts():
             tools=[],
             backstory=dedent("""\
                 A communication expert who translates technical assessments into clear, 
-                actionable feedback, that is easily understood by junior engineers.
+                actionable feedback, that is easily understood by junior engineers, with some example fix or hint.
             """),
             allow_delegation=True,
             max_iter=2

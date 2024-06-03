@@ -34,18 +34,22 @@ def validate_rule(PR: PRSchema, rule: str):
     print("Rule seems valid for PR context, proceeding with the rest of the tasks")
     # define the rest of the tasks
     check_compliance = my_tasks.check_complaince(compliance_specialist)
-    verify_assessment = my_tasks.verify_assessment(review_agent, check_compliance)
-    generate_feedback = my_tasks.generate_feedback(feedback_agent, verify_assessment)
+    #verify_assessment = my_tasks.verify_assessment(review_agent, check_compliance)
+    #generate_feedback = my_tasks.generate_feedback(feedback_agent, verify_assessment)
+    generate_feedback = my_tasks.generate_feedback(feedback_agent, check_compliance)
 
     # Define the final evaluation crew
     print("executing review crew for rule: "+rule)
     crew = Crew(
         agents=[ # include available specialiazied experts here as well
             compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],
-            review_agent, feedback_agent
+            #review_agent, 
+            feedback_agent
         ], 
         tasks=[
-            check_compliance, verify_assessment, generate_feedback
+            check_compliance, 
+            #verify_assessment, 
+            generate_feedback
         ],
         manager_llm=ChatOpenAI(temperature=0, model="gpt-4o"),
         process=Process.hierarchical,
