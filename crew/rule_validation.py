@@ -10,7 +10,7 @@ def validate_rule(PR: PRSchema, rule: str):
     rule_validator = expert.rule_relevant_analyst()
     compliance_specialist = expert.compliance_specialist()
     specialized_experts = expert.specialized_experts()
-    review_agent = expert.review_agent()
+    #review_agent = expert.review_agent()
     feedback_agent = expert.feedback_agent()
 
     # Define the tasks

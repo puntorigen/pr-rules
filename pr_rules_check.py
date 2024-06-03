@@ -1,7 +1,12 @@
 import os, sys, re
 from github import Github
-from openai import OpenAI
 from crew.rule_validation import validate_rule, PRSchema
+from dataclasses import dataclass, field
+
+@dataclass
+class CheckListItem:
+    text: str
+    type: str
 
 def read_markdown_file(repo, branch, file_path):
     try:
@@ -11,10 +16,21 @@ def read_markdown_file(repo, branch, file_path):
         print(f"Error reading markdown file: {e}")
         return None
 
-def parse_checklist_items(content):
-    # Updated the regex pattern to match '- [ ] ' at the beginning of each line
-    checklist_pattern = re.compile(r'- \[\] (.*)')
-    checklist_items = checklist_pattern.findall(content)
+def parse_checklist_items(content) -> list[CheckListItem]:
+    # Update the regex pattern to match both '- [x] ' and '- [ ] ' at the beginning of each line
+    checklist_pattern = re.compile(r'- \[([ xX])\] (.*)')
+    checklist_items = []
+
+    for line in content.split('\n'):
+        match = checklist_pattern.match(line)
+        if match:
+            status, item = match.groups()
+            item_data = CheckListItem(
+                text=item.strip(),
+                type='mandatory' if status.lower() == 'x' else 'warning'
+            )
+            checklist_items.append(item_data)
+
     return checklist_items
 
 def get_diff(repo, base_branch, compare_branch):
@@ -96,7 +112,7 @@ def main():
     comment_content = "# PR Rules Checklist\n\n"
     processed_items_count = 0
     for rule in checklist_items:
-        print(f"Checking rule: {rule}")
+        print(f"Checking rule: {rule.text}")
 
         llm_response = validate_rule(PRSchema(
             title = pr.title,
@@ -104,13 +120,13 @@ def main():
             files_diff = diff
         ), rule)
 
-        print(f"LLM Crew Response received for rule: {rule}", llm_response)
+        print(f"LLM Crew Response received for rule: {rule.text}", llm_response)
 
         if llm_response.complies:
             #comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} (score: {llm_response.score}/100)\n"
-            comment_content += animated_rule("success",rule,llm_response.score,3000+(processed_items_count*500))
+            comment_content += animated_rule("success",rule.text,llm_response.score,3000+(processed_items_count*500))
         else:
-            comment_content += animated_rule("failure",rule,llm_response.score,3000+(processed_items_count*500))
+            comment_content += animated_rule("failure",rule.text,llm_response.score,3000+(processed_items_count*500))
             #comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
             comment_content += "\n- **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
@@ -127,22 +143,25 @@ def main():
                 #    comment_content += f"  - **Example Code Improvements:**\n"
                 #    for fix in reasoning.example_fix:
                 #        comment_content += f"    - {fix}\n"
-            break  # Stop processing further rules on failure
+            # Stop processing further rules on failure, only if rule.type is mandatory
+            if rule.type == 'mandatory':
+                break  
         processed_items_count += 1
 
     # Add remaining unchecked items
     remaining_items = checklist_items[processed_items_count+1:]
     comment_content += "\n"
     for rule in remaining_items:
-        comment_content += animated_rule("pending",rule,100,3000) + "\n"
+        comment_content += animated_rule("pending",rule.text,100,3000) + "\n"
         #comment_content += f"- [ ] {rule}\n" 
 
     # Post the comment on the PR
     post_comment(pr, comment_content)
 
-    # Fail the action if any rule check failed
-    if not llm_response.complies:
+    # Fail the action if we have any remaining rules to check
+    if remaining_items:
         sys.exit(1)
+    #if not llm_response.complies:
 
 if __name__ == "__main__":
     main()
