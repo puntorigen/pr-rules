@@ -131,9 +131,10 @@ def main():
 
     # Add remaining unchecked items
     remaining_items = checklist_items[processed_items_count+1:]
+    comment_content += "\n"
     for rule in remaining_items:
         comment_content += animated_rule("pending",rule,100,3000) + "\n"
-        #comment_content += f"- [ ] {rule}\n"
+        #comment_content += f"- [ ] {rule}\n" 
 
     # Post the comment on the PR
     post_comment(pr, comment_content)
