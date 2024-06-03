@@ -76,12 +76,17 @@ def animated_rule(type="success",rule="",score=100,speed=3000):
 def main():
     # Get inputs
     token = sys.argv[1]
-    openai_api_key = sys.argv[2]
-    rules_file_path = sys.argv[3]
+    rules_file_path = sys.argv[2]
+    openai_api_key = sys.argv[3] if len(sys.argv) > 3 else None
 
-    # set openai api key on env
-    os.environ["OPENAI_API_KEY"] = openai_api_key
-    os.environ["OPENAI_MODEL_NAME"] = "gpt-4" # the best model for this task
+    # set OpenAI api key or install & use Ollama
+    if openai_api_key:
+        os.environ["LLM_TYPE"] = "openai"
+        os.environ["OPENAI_API_KEY"] = openai_api_key
+        os.environ["OPENAI_MODEL_NAME"] = "gpt-4" # the best model for these tasks
+    else:
+        os.environ["LLM_TYPE"] = "ollama"
+        os.environ["OPENAI_MODEL_NAME"] = "phi3:instruct"
 
     # GitHub repository details from environment variables
     repository = os.getenv('GITHUB_REPOSITORY')

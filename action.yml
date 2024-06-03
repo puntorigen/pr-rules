@@ -6,19 +6,19 @@ inputs:
     description: 'GitHub Token to authenticate the action.'
     required: true
     default: ${{ github.token }}
-  openai-api-key:
-    description: 'OpenAI API Key to use the GPT-4 model.'
-    required: true
   file-path:
     description: 'Path to the markdown rules file.'
     required: true
+  openai-api-key:
+    description: 'OpenAI API Key to use the GPT-4 model.'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.github-token }}
-    - ${{ inputs.openai-api-key }}
     - ${{ inputs.file-path }}
+    - ${{ inputs.openai-api-key }}
 branding:
   icon: 'git-pull-request'
   color: 'blue'
