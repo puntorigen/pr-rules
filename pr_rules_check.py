@@ -69,6 +69,8 @@ def animated_rule(type="success",rule="",score=100,speed=3000):
         return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=00B60A&random=false&repeat=false&width=550&height=18&lines=-+%E2%9C%85+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
     if type == "pending":
         return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=97AEB8&random=false&repeat=false&width=550&height=18&lines=-+%F0%9F%95%92+{escaped_text})](https://github.com/puntorigen/pr-rules)"
+    if type == "warning":
+        return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1500&color=FF5F15&repeat=true&random=false&width=550&height=18&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
     return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1500&color=FF0000&repeat=true&random=false&width=550&height=18&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
 
 def main():
@@ -126,9 +128,13 @@ def main():
             #comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} (score: {llm_response.score}/100)\n"
             comment_content += animated_rule("success",rule.text,llm_response.score,3000+(processed_items_count*500))
         else:
-            comment_content += animated_rule("failure",rule.text,llm_response.score,3000+(processed_items_count*500))
             #comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
-            comment_content += "\n- **Reason for failure:**\n"
+            if rule.type == 'mandatory':
+                comment_content += animated_rule("failure",rule.text,llm_response.score,3000+(processed_items_count*500))
+                comment_content += "\n- **Reason for failure:**\n"
+            else:
+                comment_content += animated_rule("warning",rule.text,llm_response.score,3000+(processed_items_count*500))
+                comment_content += "\n- **Reason for warning:**\n"
             for reasoning in llm_response.affected_sections or []:
                 if reasoning.file:
                     comment_content += f"  - **Affected File:** {reasoning.file}\n"
