@@ -1,4 +1,4 @@
-# PR-rules
+# PR Rules
 Github Action for checking a given PR against a markdown file with checklist rules written in natural language. It uses a team of experts to assest and validate your repo rules.
 
 # Requirements
@@ -7,7 +7,7 @@ Github Action for checking a given PR against a markdown file with checklist rul
 # Sample usage
 On the root of your repo, create a file called pr-rules.md with the following contents:
 
-```markdown
+```md
 - [ ] all code variables must use snake_case convention
 - [ ] the PR description cannot be empty
 - [ ] the PR description must be in english
