@@ -1,5 +1,5 @@
-# pr-rules
-Github Action for checking a given PR against a markdown file with checklist rules written in natural language (they can be written on any language).
+# PR-rules
+Github Action for checking a given PR against a markdown file with checklist rules written in natural language. It uses a team of experts to assest and validate your repo rules.
 
 # Requirements
 - OpenAI API Key
@@ -9,10 +9,11 @@ On the root of your repo, create a file called pr-rules.md with the following co
 
 ```md
 [] all code variables must use snake_case convention
+[] the PR description cannot be empty
 [] the PR description must be in english
-[] the PR description must specify which tests where performed
-[] no code diff should be more than 100 lines 
+[] the methods names should always have descriptive names 
 [] the code can't contain literal SQL statements
+[] no code diff should be more than 100 lines 
 ```
 
 then on your repo create a github workflow template like the following:
