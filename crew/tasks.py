@@ -22,7 +22,7 @@ class Reasoning(BaseModel):
     section: Literal["title", "description", "file", "other"] = Field(description="Section of the PR that is not complying (title, description, file, or other)")
     file: Optional[str] = Field(description="Affected file by rule, if applicable")
     why_is_not_complying: str = Field(description="Reason why the rule is not valid for this section, you may use markdown to highlight important keywords; only specify why it doesn't comply, without specifying what does comply, and don't repeat the rule on the reasoning.")
-    what_should_be_changed: Optional[List[str]] = Field(description="List of instructions for the developer on how to comply with the rule, using best practices, you may use markdown to highlight important keywords")
+    what_should_be_changed: Optional[List[str]] = Field(description="List of instructions for the developer on how to comply with the rule, using best practices, you may use markdown syntax for bold and markdown code-blocks for examples.")
     #example_fix: List[str] = Field(description="Upto two examples on how the section should be fixed to comply with the rule, so a junior engineer understands how to fix it")
 
 class RulesOutput(BaseModel):
