@@ -16,7 +16,8 @@ class Experts():
                 intricate details of code changes, ensuring rules are relevant 
                 to PR contents."""),
             verbose=True,
-            allow_delegation=False
+            allow_delegation=False,
+            max_iter=5
         )
 
     def compliance_specialist(self):
@@ -28,6 +29,7 @@ class Experts():
                 A meticulous professional with deep knowledge of coding standards 
                 and best practices, capable of identifying nuances in compliance about the requested rule."""),
             allow_delegation=True, # can delegate tasks to specialized experts
+            max_iter=10
             #verbose=True
         )
 
@@ -48,6 +50,7 @@ class Experts():
                         best practices, capable of providing detailed feedback on Python code, focused on the requested rule we are checking.
                     """),
                     allow_delegation=True,
+                    max_iter=2
                     #verbose=True
                 )
             ],
@@ -65,6 +68,7 @@ class Experts():
                         best practices, capable of providing detailed feedback on SQL, focused on the requested rule we are checking.
                     """),
                     allow_delegation=False,
+                    max_iter=2
                     #verbose=True
                 )
             ]
@@ -80,6 +84,7 @@ class Experts():
                 An experienced reviewer with a background in code review and 
                 quality assurance, ensuring that compliance checks are correctly applied for the requested rule."""),
             #verbose=True,
+            max_iter=10,
             allow_delegation=False # Reviewer can delegate tasks to specialized experts
         )
 
@@ -93,5 +98,6 @@ class Experts():
                 actionable feedback, that is easily understood by junior engineers.
             """),
             allow_delegation=True,
+            max_iter=2
             #verbose=True
         )

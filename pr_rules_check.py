@@ -49,8 +49,8 @@ def color_text(text, color):
 def animated_rule(type="success",rule="",score=100,speed=3000):
     escaped_text = rule.replace(" ",r"+")
     if type == "success":
-        return f"[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=00B60A&random=false&repeat=false&width=500&lines=-+%E2%9C%85+{escaped_text}+(score+{score}%2F100))](https://git.io/typing-svg)"
-    return f"[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=FF0000&repeat=false&random=false&width=500&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://git.io/typing-svg)"
+        return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1000&color=00B60A&random=false&repeat=false&width=550&height=18&lines=-+%E2%9C%85+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
+    return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1500&color=FF0000&repeat=true&random=false&width=550&height=18&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
 
 def main():
     # Get inputs
@@ -105,11 +105,11 @@ def main():
 
         if llm_response.complies:
             #comment_content += f"- ✅ {color_text(rule, 'ForestGreen')} (score: {llm_response.score}/100)\n"
-            comment_content += animated_rule("success",rule,llm_response.score,3000)
+            comment_content += animated_rule("success",rule,llm_response.score,3000+(processed_items_count*500))
         else:
-            comment_content += animated_rule("failure",rule,llm_response.score,3000)
+            comment_content += animated_rule("failure",rule,llm_response.score,3000+(processed_items_count*500))
             #comment_content += f"- ❌ {color_text(rule, 'Red')} (score: {llm_response.score}/100)\n"
-            comment_content += "- **Reason for failure:**\n"
+            comment_content += "\n- **Reason for failure:**\n"
             for reasoning in llm_response.affected_sections or []:
                 if reasoning.file:
                     comment_content += f"  - **Affected File:** {reasoning.file}\n"
