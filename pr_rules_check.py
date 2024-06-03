@@ -12,7 +12,8 @@ def read_markdown_file(repo, branch, file_path):
         return None
 
 def parse_checklist_items(content):
-    checklist_pattern = re.compile(r'\[\]\s+(.*)')
+    # Updated the regex pattern to match '- [ ] ' at the beginning of each line
+    checklist_pattern = re.compile(r'- \[\] (.*)')
     checklist_items = checklist_pattern.findall(content)
     return checklist_items
 

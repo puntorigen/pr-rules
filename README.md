@@ -8,12 +8,12 @@ Github Action for checking a given PR against a markdown file with checklist rul
 On the root of your repo, create a file called pr-rules.md with the following contents:
 
 ```md
-[] all code variables must use snake_case convention
-[] the PR description cannot be empty
-[] the PR description must be in english
-[] the methods names should always have descriptive names 
-[] the code can't contain literal SQL statements
-[] no code diff should be more than 100 lines 
+- [ ] all code variables must use snake_case convention
+- [ ] the PR description cannot be empty
+- [ ] the PR description must be in english
+- [ ] the methods names should always have descriptive names 
+- [ ] the code can't contain literal SQL statements
+- [ ] no code diff should be more than 100 lines 
 ```
 
 then on your repo create a github workflow template like the following:
