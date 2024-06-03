@@ -7,7 +7,7 @@ Github Action for checking a given PR against a markdown file with checklist rul
 # Sample usage
 On the root of your repo, create a file called pr-rules.md with the following contents:
 
-```md
+```markdown
 - [ ] all code variables must use snake_case convention
 - [ ] the PR description cannot be empty
 - [ ] the PR description must be in english
