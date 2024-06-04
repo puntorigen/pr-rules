@@ -1,5 +1,5 @@
 def hello_world():
-    print("Hello my24 world!")
+    print("Hello my25 world!")
 
 class Person:
     def __init__(self, name, age):
