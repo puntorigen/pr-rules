@@ -16,4 +16,5 @@ services:
       - GITHUB_REPOSITORY
       - GITHUB_REF
       - GITHUB_SHA
+      - FILE_PATH
     entrypoint: ["python", "/pr_rules_check.py"]

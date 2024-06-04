@@ -74,10 +74,17 @@ def animated_rule(type="success",rule="",score=100,speed=3000):
     return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1500&color=FF0000&repeat=true&random=false&width=550&height=18&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
 
 def main():
-    # Get inputs
-    token = sys.argv[1]
-    rules_file_path = sys.argv[2]
-    openai_api_key = sys.argv[3] if len(sys.argv) > 3 else None
+    # test inputs source
+    rules_file_path = os.getenv('FILE_PATH')
+    # Get inputs from args if rules_file_path is not set
+    if not rules_file_path:
+        token = sys.argv[1]
+        rules_file_path = sys.argv[2]
+        openai_api_key = sys.argv[3] if len(sys.argv) > 3 else None
+    else:
+        # get from environment variables
+        token = os.getenv('GITHUB_TOKEN')
+        openai_api_key = os.getenv('OPENAI_API_KEY')
 
     # set OpenAI api key or install & use Ollama
     if openai_api_key:

@@ -5,6 +5,9 @@ FILE_PATH=$2
 OPENAI_API_KEY=$3
 
 if [ -z "$OPENAI_API_KEY" ]; then
+  # export args as ENV variables
+  export GITHUB_TOKEN=$GITHUB_TOKEN
+  export FILE_PATH=$FILE_PATH  
   echo "OpenAI API key not provided. Starting Ollama using Docker Compose..."
   docker-compose up -d
   #docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
