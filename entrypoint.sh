@@ -17,4 +17,5 @@ fi
 
 # Start the script
 #python /pr_rules_check.py $@
-python /pr_rules_check.py \"$0\" \"$1\" \"$2\"
+echo "Running the script... $@"
+python /pr_rules_check.py $@

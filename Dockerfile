@@ -17,7 +17,7 @@ RUN chmod +x /entrypoint.sh
 COPY crew /crew
 
 # Set the entrypoint to the script
-#ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$@\""]
-ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$0\" \"$1\" \"$2\""]
+ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh $@"]
+#ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$0\" \"$1\" \"$2\""]
 #ENTRYPOINT ["/entrypoint.sh"]
 #ENTRYPOINT ["python", "/pr_rules_check.py"]
