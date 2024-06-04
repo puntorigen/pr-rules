@@ -6,7 +6,9 @@ RUN apt-get update && \
     apt-get clean
 
 # Install Python dependencies
-RUN pip install --no-cache-dir PyGithub gitpython pydantic openai crewai crewai[tools]
+RUN pip install --no-cache-dir PyGithub gitpython pydantic openai crewai[tools] 
+# Install custom puntorigen crewai with latest instructor 1.3.2 (support ollama output_pydantic)
+RUN pip install https://github.com/puntorigen/crewai/archive/main.zip
 
 # Copy the action script
 COPY pr_rules_check.py /pr_rules_check.py
@@ -21,8 +23,3 @@ COPY crew /crew
 
 # Set the entrypoint to the script
 ENTRYPOINT ["/entrypoint.sh"]
-#ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$@\"", "sh"]
-#ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh `\"$@\"`"]
-#ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$0\" \"$1\" \"$2\""]
-#ENTRYPOINT ["/entrypoint.sh"]
-#ENTRYPOINT ["python", "/pr_rules_check.py"]

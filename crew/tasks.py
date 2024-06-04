@@ -29,7 +29,7 @@ class RulesOutput(BaseModel):
     complies: bool = Field(description="True if the rule is correct, False if the rule is not being complied")
     score: int = Field(description="Score of the adherence to the rule, from 0 (bad) to 100 (perfect)")
     affected_sections: Optional[List[Reasoning]] = Field(description="If the PR doesn't adhere to the rule, indicates the affected sections and the reason for non-compliance regarding only the specified rule.")
-
+ 
 # task definitions
 class Tasks():
     def __init__(self, PR:PRSchema, rule:str):
@@ -104,6 +104,7 @@ class Tasks():
                 # It's critical that your output is focused only on the requested rule and nothing else.     
             """),
             output_pydantic=RulesOutput,
+            #output_file="feedback_report.md",
             expected_output=dedent(f"""\
                 A detailed document summarizing the compliance check process for the given rule of '{self.rule}', which files are related, the final compliance status, with actionable feedback that a junior engineer can easily understand and apply, with an example fix or hint.
                 Never change the given rule assestment from the previous agents, even if it can be improved. If it's valid, it's valid, if not, it isn't, but never say that even if it's valid it should be different.

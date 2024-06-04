@@ -21,11 +21,13 @@ class Experts():
     def rule_relevant_analyst(self):
         return Agent(
             role='Rule Relevance Analyst',
-            goal='Determines if a rule is related to the PR',
+            goal='Determines if a rule is related to the PR or not. If the rule is not related, the agent will return false. If the rule is related, the agent will return true.',
             backstory=dedent("""\
                 An expert in understanding both high-level requirements and 
                 intricate details of code changes, ensuring rules are relevant 
-                to PR contents."""),
+                to PR contents. 
+                Only return false if you are completely sure the rule is not related 
+                nor relevant for the PR."""),
             verbose=True,
             allow_delegation=False,
             max_iter=5,

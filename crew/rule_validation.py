@@ -10,7 +10,7 @@ def validate_rule(PR: PRSchema, rule: str):
     rule_validator = expert.rule_relevant_analyst()
     compliance_specialist = expert.compliance_specialist()
     specialized_experts = expert.specialized_experts()
-    #review_agent = expert.review_agent()
+    review_agent = expert.review_agent() # for ollama
     feedback_agent = expert.feedback_agent()
 
     # Define the tasks
@@ -41,19 +41,43 @@ def validate_rule(PR: PRSchema, rule: str):
     # Define the final evaluation crew
     print("executing review crew for rule: "+rule)
     manager_llm = get_llm(openai="gpt-4o")
-    crew = Crew(
-        agents=[ # include available specialiazied experts here as well
-            compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],
-            #review_agent, 
-            feedback_agent
-        ], 
-        tasks=[
-            check_compliance, 
-            #verify_assessment, 
-            generate_feedback
-        ],
-        manager_llm=manager_llm,
-        process=Process.hierarchical,
-        memory=False if os.getenv('LLM_TYPE') == "ollama" else True
-    )
-    return crew.kickoff()
+    if os.getenv('LLM_TYPE') == "ollama":
+        #verify_assessment = my_tasks.verify_assessment(review_agent, check_compliance)
+        #generate_feedback = my_tasks.generate_feedback(feedback_agent, verify_assessment)
+        crew = Crew(
+            agents=[ # include available specialiazied experts here as well
+                compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],
+                #review_agent, 
+                feedback_agent
+            ], 
+            tasks=[
+                check_compliance, 
+                #verify_assessment, 
+                generate_feedback
+            ],
+            manager_llm=manager_llm,
+            process=Process.hierarchical,
+            memory=False
+        )
+        return crew.kickoff()
+        #report = crew.kickoff()
+        #print("transforming report into pydantic model:\n",report)
+        #return output_to_pydantic(report, RulesOutput)
+    
+    else:
+        crew = Crew(
+            agents=[ # include available specialiazied experts here as well
+                compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],
+                #review_agent, 
+                feedback_agent
+            ], 
+            tasks=[
+                check_compliance, 
+                #verify_assessment, 
+                generate_feedback
+            ],
+            manager_llm=manager_llm,
+            process=Process.hierarchical,
+            memory=True
+        )
+        return crew.kickoff()
