@@ -1,40 +1,70 @@
+import os
 from textwrap import dedent
 from crewai import Agent
-
-# Assuming ExaSearchTool is a placeholder for actual tools that agents can use
-#from tools import ResearchTools, FeedbackTools
 from crewai_tools import RagTool
+from langchain_openai import ChatOpenAI
 
 class Experts():
     def rule_relevant_analyst(self):
-        return Agent(
-            role='Rule Relevance Analyst',
-            goal='Determines if a rule is related to the PR',
-            #tools=ResearchTools.tools(),
-            backstory=dedent("""\
-                An expert in understanding both high-level requirements and 
-                intricate details of code changes, ensuring rules are relevant 
-                to PR contents."""),
-            verbose=True,
-            allow_delegation=False,
-            max_iter=5
-        )
+        if os.getenv('LLM_TYPE') == "ollama":
+            # adapt the agent to smaller LLMs
+            return Agent(
+                role='Rule Relevance Analyst',
+                goal='Determines if a rule is related to the PR',
+                backstory=dedent("""\
+                    An expert in understanding both high-level requirements and 
+                    intricate details of code changes, ensuring rules are relevant 
+                    to PR contents."""),
+                verbose=True,
+                allow_delegation=False,
+                max_iter=5,
+                llm=ChatOpenAI(model = "phi3:3.8b-mini-128k-instruct-q8_0")
+            )
+        else:
+            return Agent(
+                role='Rule Relevance Analyst',
+                goal='Determines if a rule is related to the PR',
+                backstory=dedent("""\
+                    An expert in understanding both high-level requirements and 
+                    intricate details of code changes, ensuring rules are relevant 
+                    to PR contents."""),
+                verbose=True,
+                allow_delegation=False,
+                max_iter=5
+            )
 
     def compliance_specialist(self):
-        return Agent(
-            role='Compliance Specialist',
-            goal='Oversees compliance checks and delegates to specialized experts if needed, always paying special focus to the defined rule, ignoring other comments that are not related to the specified rule.',
-            tools=[],
-            backstory=dedent("""\
-                A meticulous professional with deep knowledge of coding standards 
-                and best practices, capable of identifying nuances in compliance about the requested rule."""),
-            allow_delegation=True, # can delegate tasks to specialized experts
-            max_iter=10
-            #verbose=True
-        )
+        if os.getenv('LLM_TYPE') == "ollama":
+            return Agent(
+                role='Compliance Specialist',
+                goal='Oversees compliance checks and delegates to specialized experts if needed, always paying special focus to the defined rule, ignoring other comments that are not related to the specified rule.',
+                tools=[],
+                backstory=dedent("""\
+                    A meticulous professional with deep knowledge of coding standards 
+                    and best practices, capable of identifying nuances in compliance about the requested rule."""),
+                allow_delegation=True, # can delegate tasks to specialized experts
+                max_iter=10,
+                llm=ChatOpenAI(model = "phi3:3.8b-mini-128k-instruct-q8_0"), # use specific model if needed, phi3 is the default
+                #verbose=True
+            )
+        else:
+            return Agent(
+                role='Compliance Specialist',
+                goal='Oversees compliance checks and delegates to specialized experts if needed, always paying special focus to the defined rule, ignoring other comments that are not related to the specified rule.',
+                tools=[],
+                backstory=dedent("""\
+                    A meticulous professional with deep knowledge of coding standards 
+                    and best practices, capable of identifying nuances in compliance about the requested rule."""),
+                allow_delegation=True, # can delegate tasks to specialized experts
+                max_iter=10
+                #verbose=True
+            )
 
     def specialized_experts(self):
         # dict with array of specialized experts (python,java,database,security,etc.)
+        llm = ChatOpenAI(model = "gpt-4")
+        if os.getenv('LLM_TYPE') == "ollama":
+            llm = ChatOpenAI(model = "phi3:3.8b-mini-128k-instruct-q8_0")
         return {
             "coding": [
                 Agent(
@@ -50,7 +80,8 @@ class Experts():
                         best practices, capable of providing detailed feedback on Python code, focused on the requested rule we are checking.
                     """),
                     allow_delegation=True,
-                    max_iter=2
+                    max_iter=2,
+                    llm = llm
                     #verbose=True
                 )
             ],
@@ -68,7 +99,8 @@ class Experts():
                         best practices, capable of providing detailed feedback on SQL, focused on the requested rule we are checking.
                     """),
                     allow_delegation=False,
-                    max_iter=2
+                    max_iter=2,
+                    llm = llm
                     #verbose=True
                 )
             ]
