@@ -2,7 +2,6 @@
 from crewai import Crew, Process
 from crew.experts import Experts, get_llm
 from crew.tasks import Tasks, PRSchema, RulesOutput
-from langchain_openai import ChatOpenAI
 import os
 
 def validate_rule(PR: PRSchema, rule: str):
@@ -41,7 +40,7 @@ def validate_rule(PR: PRSchema, rule: str):
 
     # Define the final evaluation crew
     print("executing review crew for rule: "+rule)
-    manager_llm = get_llm(ollama="gpt-4o")
+    manager_llm = get_llm(openai="gpt-4o")
     crew = Crew(
         agents=[ # include available specialiazied experts here as well
             compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],
