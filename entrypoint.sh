@@ -13,6 +13,8 @@ if [ -z "$OPENAI_API_KEY" ]; then
   echo "Downloading phi3 128k model..."
   docker-compose exec ollama ollama pull "phi3:3.8b-mini-128k-instruct-q8_0"
   sleep 5
+  # Follow the logs of all services
+  docker-compose logs -f
   #docker exec ollama ollama pull "phi3:3.8b-mini-128k-instruct-q8_0"
   # create the model file & download to local folder
   #docker exec ollama ollama create $custom_model_name -f ./Llama2ModelFile
