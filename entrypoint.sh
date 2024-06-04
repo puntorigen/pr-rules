@@ -11,6 +11,9 @@ if [ -z "$OPENAI_API_KEY" ]; then
   sleep 10
   echo "Downloading phi3 128k model..."
   docker exec ollama ollama pull "phi3:3.8b-mini-128k-instruct-q8_0"
+  # create the model file & download to local folder
+  #docker exec ollama ollama create $custom_model_name -f ./Llama2ModelFile
+
 else
   echo "OpenAI API key provided. Skipping Ollama installation."
 fi
@@ -18,4 +21,5 @@ fi
 # Start the script
 #python /pr_rules_check.py $@
 echo "Running the script... $@"
-exec python /pr_rules_check.py "$@"
+#exec python /pr_rules_check.py "$@"
+python /pr_rules_check.py "$@"

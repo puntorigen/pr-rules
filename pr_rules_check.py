@@ -87,7 +87,7 @@ def main():
     else:
         os.environ["LLM_TYPE"] = "ollama"
         os.environ["OPENAI_API_BASE"] = "http://127.0.0.1:11434/v1"
-        os.environ["OPENAI_API_KEY"] = "not-needed"
+        os.environ["OPENAI_API_KEY"] = "ollama"
         os.environ["OPENAI_MODEL_NAME"] = "phi3:3.8b-mini-128k-instruct-q8_0"
 
     # GitHub repository details from environment variables

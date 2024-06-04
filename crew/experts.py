@@ -3,16 +3,18 @@ from textwrap import dedent
 from crewai import Agent
 from crewai_tools import RagTool
 from langchain_openai import ChatOpenAI
+from langchain_community.llms import Ollama
 
-def get_llm(openai="gpt-4",ollama="phi3:3.8b-mini-128k-instruct-q8_0"):
+def get_llm(openai="gpt-4",ollama="phi3:3.8b-mini-128k-instruct-q8_0", temperature=0):
     if os.getenv('LLM_TYPE') == "ollama":
+        return Ollama(model=ollama, temperature=temperature, num_predict=-1)
         return ChatOpenAI(
             api_key="ollama",
             base_url="http://127.0.0.1:11434/v1",
             temperature=0,
             model = ollama)
     else:
-        return ChatOpenAI(model = openai)
+        return ChatOpenAI(model = openai, temperature=temperature)
 
 class Experts():
     def rule_relevant_analyst(self):
