@@ -8,7 +8,7 @@ def get_llm(openai="gpt-4",ollama="phi3:3.8b-mini-128k-instruct-q8_0"):
     if os.getenv('LLM_TYPE') == "ollama":
         return ChatOpenAI(
             api_key="not-needed",
-            base_url="http://localhost:11434/v1",
+            base_url="http://127.0.0.1:11434/v1",
             temperature=0,
             model = "phi3:3.8b-mini-128k-instruct-q8_0")
     else:
