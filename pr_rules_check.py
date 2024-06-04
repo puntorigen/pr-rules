@@ -93,7 +93,7 @@ def main():
         os.environ["OPENAI_MODEL_NAME"] = "gpt-4" # the best model for these tasks
     else:
         os.environ["LLM_TYPE"] = "ollama"
-        os.environ["OPENAI_API_BASE"] = "http://ollama:11434" # Ollama API base URL; use docker instance name inside actions
+        os.environ["OPENAI_API_BASE"] = "http://127.0.0.1:11434" # Ollama API base URL; use docker instance name inside actions
         os.environ["OPENAI_API_KEY"] = "ollama"
         os.environ["OPENAI_MODEL_NAME"] = "phi3:3.8b-mini-128k-instruct-q8_0"
 
