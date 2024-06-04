@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+
+  pr-rules-check:
+    build: .
+    container_name: pr-rules-check
+    environment:
+      - GITHUB_TOKEN
+      - OPENAI_API_KEY
+      - GITHUB_REPOSITORY
+      - GITHUB_REF
+      - GITHUB_SHA
+    entrypoint: ["python", "/pr_rules_check.py"]
