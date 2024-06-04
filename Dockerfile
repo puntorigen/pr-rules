@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir PyGithub gitpython pydantic openai crewai crewai[
 # Copy the action script
 COPY pr_rules_check.py /pr_rules_check.py
 COPY entrypoint.sh /entrypoint.sh
+COPY install_ollama.sh /install_ollama.sh
+RUN chmod +x /install_ollama.sh
 COPY docker-compose.yml /docker-compose.yml
 RUN chmod +x /entrypoint.sh
 
