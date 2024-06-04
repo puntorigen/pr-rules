@@ -16,4 +16,4 @@ else
 fi
 
 # Start the script
-python /app/pr_rules_check.py "$@"
+python /pr_rules_check.py "$@"
