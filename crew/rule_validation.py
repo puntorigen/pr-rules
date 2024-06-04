@@ -55,8 +55,8 @@ def validate_rule(PR: PRSchema, rule: str):
                 #verify_assessment, 
                 generate_feedback
             ],
-            manager_llm=manager_llm,
-            process=Process.hierarchical,
+            #manager_llm=manager_llm,
+            #process=Process.hierarchical,
             memory=False
         )
         return crew.kickoff()

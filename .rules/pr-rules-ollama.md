@@ -1,5 +1,5 @@
-- [ ] all code variables must use snake_case convention
-- [ ] the PR description cannot be empty
-- [ ] the PR description must be in english
-- [ ] the methods names should always have descriptive names 
-- [ ] the code can't contain literal SQL statements
+- [x] all code variables must use snake_case convention
+- [x] the PR description cannot be empty
+- [x] the PR description must be in english
+- [x] the methods names should always have descriptive names 
+- [x] the code can't contain literal SQL statements
