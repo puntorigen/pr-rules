@@ -43,8 +43,8 @@ class Tasks():
             ### Files diff list of tuples: 
         """)
         for file in self.PR.files_diff:
-            self.pr_str += f"filename: {str(file)}\n"
-            self.pr_str += f"diff content: ```{file[1]}```\n\n"
+            self.pr_str += f"filename:\n{str(file[0])}\n"
+            self.pr_str += f"diff content:\n```{file[1]}```\n"
 
     def is_rule_relevant(self, agent):
         return Task(
