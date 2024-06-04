@@ -134,7 +134,7 @@ def main():
             title = pr.title,
             body = pr.body,
             files_diff = diff
-        ), rule)
+        ), rule.text)
 
         print(f"LLM Crew Response received for rule: {rule.text}", llm_response)
 
