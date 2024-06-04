@@ -17,7 +17,7 @@ RUN chmod +x /entrypoint.sh
 COPY crew /crew
 
 # Set the entrypoint to the script
-ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$@\""]
+#ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$@\""]
+ENTRYPOINT ["/bin/sh", "-c", "/entrypoint.sh \"$0\" \"$1\" \"$2\""]
 #ENTRYPOINT ["/entrypoint.sh"]
-#ENTRYPOINT ["/bin/sh", "-c", "/install_ollama.sh \"$0\" \"$1\" \"$2\" && python /pr_rules_check.py \"$0\" \"$1\" \"$2\""]
 #ENTRYPOINT ["python", "/pr_rules_check.py"]

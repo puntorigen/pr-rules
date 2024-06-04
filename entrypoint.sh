@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# Export GitHub environment variables for the Python script (hacky)
-export GITHUB_REPOSITORY=$GITHUB_REPOSITORY
-export GITHUB_REF=$GITHUB_REF
-
 GITHUB_TOKEN=$1
 FILE_PATH=$2
 OPENAI_API_KEY=$3
@@ -20,4 +16,5 @@ else
 fi
 
 # Start the script
-python /pr_rules_check.py "$@"
+#python /pr_rules_check.py $@
+python /pr_rules_check.py \"$0\" \"$1\" \"$2\"
