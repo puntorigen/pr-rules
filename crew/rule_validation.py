@@ -41,9 +41,7 @@ def validate_rule(PR: PRSchema, rule: str):
 
     # Define the final evaluation crew
     print("executing review crew for rule: "+rule)
-    manager_llm = ChatOpenAI(temperature=0, model="gpt-4o")
-    if os.getenv('LLM_TYPE') == "ollama":
-        manager_llm = get_llm()
+    manager_llm = get_llm(ollama="gpt-4o")
     crew = Crew(
         agents=[ # include available specialiazied experts here as well
             compliance_specialist, *specialized_experts["coding"], *specialized_experts["database"],

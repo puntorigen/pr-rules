@@ -4,7 +4,7 @@ from crewai import Agent
 from crewai_tools import RagTool
 from langchain_openai import ChatOpenAI
 
-def get_llm():
+def get_llm(openai="gpt-4",ollama="phi3:3.8b-mini-128k-instruct-q8_0"):
     if os.getenv('LLM_TYPE') == "ollama":
         return ChatOpenAI(
             api_key="not-needed",
