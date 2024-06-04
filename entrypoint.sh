@@ -18,4 +18,4 @@ fi
 # Start the script
 #python /pr_rules_check.py $@
 echo "Running the script... $@"
-python /pr_rules_check.py $@
+python /pr_rules_check.py `"$@"`
