@@ -55,6 +55,6 @@ def validate_rule(PR: PRSchema, rule: str):
         ],
         manager_llm=manager_llm,
         process=Process.hierarchical,
-        memory=True
+        memory=False if os.getenv('LLM_TYPE') == "ollama" else True
     )
     return crew.kickoff()
