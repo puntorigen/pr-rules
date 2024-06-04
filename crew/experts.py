@@ -5,6 +5,14 @@ from crewai_tools import RagTool
 from langchain_openai import ChatOpenAI
 #from langchain_community.llms import Ollama
 
+def get_max_num_iterations(desired_num_iterations=5):
+    max_num_iterations = 5
+    if os.getenv('LLM_TYPE') == "ollama":
+        max_num_iterations = 1
+    if desired_num_iterations > max_num_iterations:
+        return max_num_iterations
+    return desired_num_iterations
+
 def get_llm(openai="gpt-4",ollama="phi3:3.8b-mini-128k-instruct-q8_0", temperature=0):
     if os.getenv('LLM_TYPE') == "ollama":
         base_url = os.getenv('OPENAI_API_BASE') or "http://localhost:11434"
@@ -30,7 +38,7 @@ class Experts():
                 nor relevant for the PR."""),
             verbose=True,
             allow_delegation=False,
-            max_iter=5,
+            max_iter=get_max_num_iterations(5),
             llm=get_llm()
         )
 
@@ -43,7 +51,7 @@ class Experts():
                 A meticulous professional with deep knowledge of coding standards 
                 and best practices, capable of identifying nuances in compliance about the requested rule."""),
             allow_delegation=True, # can delegate tasks to specialized experts
-            max_iter=10,
+            max_iter=get_max_num_iterations(10),
             llm=get_llm()
             #verbose=True
         )
@@ -66,7 +74,7 @@ class Experts():
                         best practices, capable of providing detailed feedback on Python code, focused on the requested rule we are checking.
                     """),
                     allow_delegation=True,
-                    max_iter=2,
+                    max_iter=get_max_num_iterations(2),
                     llm = llm
                     #verbose=True
                 )
@@ -85,7 +93,7 @@ class Experts():
                         best practices, capable of providing detailed feedback on SQL, focused on the requested rule we are checking.
                     """),
                     allow_delegation=False,
-                    max_iter=2,
+                    max_iter=get_max_num_iterations(2),
                     llm = llm
                     #verbose=True
                 )
@@ -103,7 +111,7 @@ class Experts():
                 quality assurance, ensuring that compliance checks are correctly applied for the requested rule."""),
             #verbose=True,
             llm = get_llm(),
-            max_iter=10,
+            max_iter=get_max_num_iterations(10),
             allow_delegation=False # Reviewer can delegate tasks to specialized experts
         )
 
@@ -117,7 +125,7 @@ class Experts():
                 actionable feedback, that is easily understood by junior engineers, with some example fix or hint.
             """),
             allow_delegation=True,
-            max_iter=2,
+            max_iter=get_max_num_iterations(2),
             llm = get_llm(),
             #verbose=True
         )
