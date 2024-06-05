@@ -21,7 +21,7 @@ def validate_rule(PR: PRSchema, rule: str):
     test_crew = Crew(
         agents=[rule_validator],
         tasks=[is_rule_relevant],
-        verbose=2
+        #verbose=2
     )
     print("Starting Validation Crew")
     is_valid = test_crew.kickoff()
@@ -58,7 +58,7 @@ def validate_rule(PR: PRSchema, rule: str):
             ],
             #manager_llm=manager_llm,
             #process=Process.hierarchical,
-            verbose=1,
+            #verbose=1,
             memory=False,
         )
         return crew.kickoff()
