@@ -3,9 +3,13 @@ name: PR Rules Check (OpenAI)
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches:
+      - openai
   issue_comment:
     types: [created, edited]
-
+    branches:
+      - openai
+      
 env:
   BRANCH_NAME: "openai"
 

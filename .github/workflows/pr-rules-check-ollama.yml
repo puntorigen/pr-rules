@@ -3,8 +3,12 @@ name: PR Rules Check (Ollama)
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches:
+      - ollama
   issue_comment:
     types: [created, edited]
+    branches:
+      - ollama
 
 env:
   BRANCH_NAME: "ollama"
@@ -32,10 +36,10 @@ jobs:
           PR_URL="${{ github.event.comment.issue_url }}"
           PR_NUMBER="${PR_URL##*/}"
           echo "Pull Request Number: $PR_NUMBER"
-          # Fetch PR details
+          # Fetch PR details and write base_ref to the environment file
           PR_DETAILS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
           BASE_REF=$(echo "$PR_DETAILS" | jq --raw-output '.base.ref')
-          echo "::set-output name=base_ref::$BASE_REF"
+          echo "base_ref=$BASE_REF" >> $GITHUB_ENV
 
       # Conditionally run this step only if it's a push to ollama branch or a PR targeting ollama branch
       - name: Run PR Rules Check for PR Events
@@ -47,7 +51,7 @@ jobs:
       
       # Conditionally run this step only if it's a comment containing '@pr-rules' in the body on a PR targeting ollama branch
       - name: Run PR Rules Check for Comment Events
-        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules') && steps.get-pr.outputs.base_ref == env.BRANCH_NAME
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules') && env.base_ref == env.BRANCH_NAME
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
