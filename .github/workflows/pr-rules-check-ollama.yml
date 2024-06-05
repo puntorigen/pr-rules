@@ -3,8 +3,6 @@ name: PR Rules Check (Ollama)
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - ${{ env.BRANCH_NAME }}
   issue_comment:
     types: [created, edited]
 
