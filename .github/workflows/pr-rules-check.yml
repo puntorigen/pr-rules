@@ -3,22 +3,38 @@ name: PR Rules Check (OpenAI)
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches:
+      - ${{ env.BRANCH_NAME }}
+  issue_comment:
+    types: [created, edited]
+
+env:
+  BRANCH_NAME: openai
 
 permissions:
   issues: write
   pull-requests: write
   contents: read
-  
+
 jobs:
   pr-rules-check:
     runs-on: ubuntu-latest
-    if: contains(github.head_ref, 'openai')
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run PR Rules Check
+      # Conditionally run this step only if it's a push to defined branch or a PR targeting the defined branch
+      - name: Run PR Rules Check for PR Events
+        if: github.event_name == 'pull_request' && contains(github.ref, env.BRANCH_NAME)
+        uses: ./  # Use the current repository as the action source
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          file-path: '.rules/pr-rules.md'
+
+      # Conditionally run this step only if it's a comment containing '@pr-rules' in the body on a PR targeting ollama branch
+      - name: Run PR Rules Check for Comment Events
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules') && github.event.issue.pull_request != null && contains(github.event.issue.pull_request.url, env.BRANCH_NAME)
         uses: ./  # Use the current repository as the action source
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

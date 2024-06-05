@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI
 #from langchain_community.llms import Ollama
 
 def get_max_num_iterations(desired_num_iterations=5):
-    max_num_iterations = 5 # the more iterations, the more accurate the results
+    max_num_iterations = 5 # the more iterations, the more accurate the results, but slower
     if os.getenv('LLM_TYPE') == "ollama":
         max_num_iterations = 3
     if desired_num_iterations > max_num_iterations:
