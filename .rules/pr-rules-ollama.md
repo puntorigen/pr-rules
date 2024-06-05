@@ -1,4 +1,4 @@
-- [x] all code variables must use snake_case convention
+- [x] all visible code variables should have use good conventions
 - [x] the PR description cannot be empty
 - [x] the PR description must be in english
 - [x] the methods names should always have descriptive names 

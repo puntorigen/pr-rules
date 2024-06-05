@@ -16,7 +16,7 @@ class PRSchema:
 
 # output schema definitions
 class RuleValidity(BaseModel):
-    is_relevant: bool = Field(description="A boolean value indicating whether the rule is relevant to the PR contents.")
+    is_relevant: bool = Field(description="A boolean value indicating whether the rule has relation in regards to the given PR contents.")
 
 class Reasoning(BaseModel):
     section: Literal["title", "description", "file", "other"] = Field(description="Section of the PR that is not complying (title, description, file, or other)")
@@ -29,35 +29,37 @@ class RulesOutput(BaseModel):
     complies: bool = Field(description="True if the rule is correct, False if the rule is not being complied")
     score: int = Field(description="Score of the adherence to the rule, from 0 (bad) to 100 (perfect)")
     affected_sections: Optional[List[Reasoning]] = Field(description="If the PR doesn't adhere to the rule, indicates the affected sections and the reason for non-compliance regarding only the specified rule.")
-
+ 
 # task definitions
 class Tasks():
     def __init__(self, PR:PRSchema, rule:str):
         self.PR = PR
         self.rule = rule
         self.pr_str = dedent(f"""\
-            # PR context details:
-            ## Title: "{self.PR.title}"
-            ## Body: "{self.PR.body}"
+            ### PR context details:
+            **Title:** "{self.PR.title}"
+            **Body:** "{self.PR.body}"
 
-            ### Files diff list of tuples: 
+            ### Files Affected: 
         """)
         for file in self.PR.files_diff:
-            self.pr_str += f"filename: {str(file)}\n"
-            self.pr_str += f"diff content: ```{file[1]}```\n\n"
+            self.pr_str += f"**Filename:** {str(file[0])}\n"
+            self.pr_str += f"**Diff Content:**\n```{file[1]}```\n"
 
     def is_rule_relevant(self, agent):
         return Task(
             description=dedent(f"""\
                 {self.pr_str}
 
-                # Analyze the PR to determine if the rule is relevant to the PR contents.
-                # The rule to be analyzed is:
-                '{self.rule}'
+                ### Rule to be Evaluated:
+                **Rule:** "{self.rule}"
+
+                ### Question:
+                Is the rule "{self.rule}" relevant for analyzing the contents of this PR? Consider the rule's focus on the PR. We are not assessing whether the rule is satisfied, only if it is applicable to the PR provided.
             """),
             output_pydantic=RuleValidity,
             expected_output=dedent("""\
-                A boolean value indicating whether the rule is relevant to the given PR contents."""),
+                A boolean value, true if the rule is relevant, false otherwise."""),
             async_execution=False,
             agent=agent
         )
@@ -104,6 +106,7 @@ class Tasks():
                 # It's critical that your output is focused only on the requested rule and nothing else.     
             """),
             output_pydantic=RulesOutput,
+            #output_file="feedback_report.md",
             expected_output=dedent(f"""\
                 A detailed document summarizing the compliance check process for the given rule of '{self.rule}', which files are related, the final compliance status, with actionable feedback that a junior engineer can easily understand and apply, with an example fix or hint.
                 Never change the given rule assestment from the previous agents, even if it can be improved. If it's valid, it's valid, if not, it isn't, but never say that even if it's valid it should be different.

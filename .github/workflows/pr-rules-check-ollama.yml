@@ -3,23 +3,38 @@ name: PR Rules Check (Ollama)
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches:
+      - ${{ env.BRANCH_NAME }}
+  issue_comment:
+    types: [created, edited]
+
+env:
+  BRANCH_NAME: ollama
 
 permissions:
   issues: write
   pull-requests: write
   contents: read
-  
+
 jobs:
   pr-rules-check:
     runs-on: ubuntu-latest
-    if: contains(github.head_ref, 'ollama')
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run PR Rules Check
-        uses: ./  # Use the current repository as the action source
+      # Conditionally run this step only if it's a push to ollama branch or a PR targeting ollama branch
+      - name: Run PR Rules Check for PR Events
+        if: github.event_name == 'pull_request' && contains(github.ref, env.BRANCH_NAME)
+        uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          file-path: '.rules/pr-rules.md'
+          file-path: '.rules/pr-rules-ollama.md'
+      
+      # Conditionally run this step only if it's a comment containing '@pr-rules' in the body on a PR targeting ollama branch
+      - name: Run PR Rules Check for Comment Events
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules') && github.event.issue.pull_request != null && contains(github.event.issue.pull_request.url, env.BRANCH_NAME)
+        uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file-path: '.rules/pr-rules-ollama.md'

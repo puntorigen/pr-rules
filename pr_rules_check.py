@@ -74,10 +74,17 @@ def animated_rule(type="success",rule="",score=100,speed=3000):
     return f"[![{rule}](https://readme-typing-svg.demolab.com?font=Fira+Code&size=12&duration={speed}&pause=1500&color=FF0000&repeat=true&random=false&width=550&height=18&lines=-+%E2%9D%8C+{escaped_text}+(score+{score}%2F100))](https://github.com/puntorigen/pr-rules)"
 
 def main():
-    # Get inputs
-    token = sys.argv[1]
-    rules_file_path = sys.argv[2]
-    openai_api_key = sys.argv[3] if len(sys.argv) > 3 else None
+    # test inputs source
+    rules_file_path = os.getenv('FILE_PATH')
+    # Get inputs from args if rules_file_path is not set
+    if not rules_file_path:
+        token = sys.argv[1]
+        rules_file_path = sys.argv[2]
+        openai_api_key = sys.argv[3] if len(sys.argv) > 3 else None
+    else:
+        # get from environment variables
+        token = os.getenv('GITHUB_TOKEN')
+        openai_api_key = os.getenv('OPENAI_API_KEY')
 
     # set OpenAI api key or install & use Ollama
     if openai_api_key:
@@ -86,9 +93,9 @@ def main():
         os.environ["OPENAI_MODEL_NAME"] = "gpt-4" # the best model for these tasks
     else:
         os.environ["LLM_TYPE"] = "ollama"
-        os.environ["OPENAI_API_BASE"] = "http://localhost:11434/v1"
-        os.environ["OPENAI_API_KEY"] = "not-needed"
-        os.environ["OPENAI_MODEL_NAME"] = "phi3:3.8b-mini-128k-instruct-q8_0"
+        os.environ["OPENAI_API_BASE"] = "http://127.0.0.1:11434" # Ollama API base URL; use docker instance name inside actions
+        os.environ["OPENAI_API_KEY"] = "ollama"
+        #os.environ["OPENAI_MODEL_NAME"] = "phi3:3.8b-mini-128k-instruct-q8_0"
 
     # GitHub repository details from environment variables
     repository = os.getenv('GITHUB_REPOSITORY')
@@ -118,16 +125,21 @@ def main():
     diff = get_diff(repo, base_branch, compare_branch)
 
     # Build comment content
-    comment_content = "# PR Rules Checklist\n\n"
+    comment_content = "# PR Rules Checklist\n"
+    if not openai_api_key:
+        comment_content += "(ollama version)\n\n"
+    comment_content += "\n"
+
     processed_items_count = 0
     for rule in checklist_items:
+        print(f"------------------------------")
         print(f"Checking rule: {rule.text}")
 
         llm_response = validate_rule(PRSchema(
             title = pr.title,
             body = pr.body,
             files_diff = diff
-        ), rule)
+        ), rule.text)
 
         print(f"LLM Crew Response received for rule: {rule.text}", llm_response)
 
@@ -171,8 +183,8 @@ def main():
     # Post the comment on the PR
     post_comment(pr, comment_content)
 
-    # Fail the action if we have any remaining rules to check
-    if remaining_items:
+    # Fail the action if we have any remaining rules to check and we are not ollama
+    if remaining_items and openai_api_key:
         sys.exit(1)
     #if not llm_response.complies:
 
