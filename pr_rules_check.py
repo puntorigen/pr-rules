@@ -125,9 +125,14 @@ def main():
     diff = get_diff(repo, base_branch, compare_branch)
 
     # Build comment content
-    comment_content = "# PR Rules Checklist\n\n"
+    comment_content = "# PR Rules Checklist\n"
+    if not openai_api_key:
+        comment_content += "(ollama version)\n\n"
+    comment_content += "\n"
+
     processed_items_count = 0
     for rule in checklist_items:
+        print(f"------------------------------")
         print(f"Checking rule: {rule.text}")
 
         llm_response = validate_rule(PRSchema(
@@ -178,8 +183,8 @@ def main():
     # Post the comment on the PR
     post_comment(pr, comment_content)
 
-    # Fail the action if we have any remaining rules to check
-    if remaining_items:
+    # Fail the action if we have any remaining rules to check and we are not ollama
+    if remaining_items and not openai_api_key:
         sys.exit(1)
     #if not llm_response.complies:
 

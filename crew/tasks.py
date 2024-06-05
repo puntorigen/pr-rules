@@ -16,7 +16,7 @@ class PRSchema:
 
 # output schema definitions
 class RuleValidity(BaseModel):
-    is_relevant: bool = Field(description="A boolean value indicating whether the rule is relevant to the PR contents.")
+    is_relevant: bool = Field(description="A boolean value indicating whether the rule has relation in regards to the given PR contents.")
 
 class Reasoning(BaseModel):
     section: Literal["title", "description", "file", "other"] = Field(description="Section of the PR that is not complying (title, description, file, or other)")

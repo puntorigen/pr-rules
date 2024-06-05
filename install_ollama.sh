@@ -5,6 +5,6 @@ sleep 10
 echo "Starting Ollama server in background thread..."
 ollama serve > /dev/null 2>&1 &
 sleep 10
-echo "Downloading Ollama model... phi3:3.8b-mini-128k-instruct-q8_0"
-ollama pull "phi3:3.8b-mini-128k-instruct-q8_0"
+echo "Downloading Ollama model... 4.1 GB"
+ollama pull "phi3:3.8b-mini-128k-instruct-q8_0" > /dev/null 2>&1
 sleep 10
