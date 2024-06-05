@@ -21,6 +21,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # For detecting PR branch specific comments, we need to fetch the PR details first
+      - name: Fetch Pull Request Details
+        if: github.event_name == 'issue_comment'
+        id: get-pr
+        run: |
+          PR_NUMBER=$(echo "$GITHUB_EVENT_PATH" | jq --raw-output .issue.pull_request.number)
+          PR_DETAILS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
+          BASE_REF=$(echo "$PR_DETAILS" | jq --raw-output .base.ref)
+          echo "::set-output name=base_ref::$BASE_REF"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Conditionally run this step only if it's a push to ollama branch or a PR targeting ollama branch
       - name: Run PR Rules Check for PR Events
         if: github.event_name == 'pull_request' && contains(github.ref, env.BRANCH_NAME)
@@ -31,7 +43,7 @@ jobs:
       
       # Conditionally run this step only if it's a comment containing '@pr-rules' in the body on a PR targeting ollama branch
       - name: Run PR Rules Check for Comment Events
-        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules') && github.event.issue.pull_request != null && contains(github.event.issue.pull_request.url, env.BRANCH_NAME)
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules') && steps.get-pr.outputs.base_ref == env.BRANCH_NAME
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
