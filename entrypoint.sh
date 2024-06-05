@@ -11,11 +11,9 @@ if [ -z "$OPENAI_API_KEY" ]; then
   export FILE_PATH=$FILE_PATH  
   echo "OpenAI API key not provided. Starting Ollama using Shell..."
   /bin/sh -c /install_ollama.sh
-  echo "Running the script (takes about 4 mins to start)... $@"
 else
   echo "OpenAI API key provided. Skipping Ollama installation."
-  echo "Running the script... $@"
-  # only run if we have an OpenAI API key, since if not we already have the script on the docker-compose
 fi
 
+echo "Running the script... $@"
 python -u /pr_rules_check.py "$@"
