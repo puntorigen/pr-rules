@@ -26,15 +26,16 @@ jobs:
         
       # For detecting PR branch specific comments, we need to fetch the PR details first
       - name: Fetch Pull Request Details
-        if: github.event_name == 'issue_comment'
-        id: get-pr
+        if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '@pr-rules')
         run: |
-          PR_NUMBER=$(echo "$GITHUB_EVENT_PATH" | jq --raw-output .issue.pull_request.number)
+          # Extract PR number from issue_url
+          PR_URL="${{ github.event.comment.issue_url }}"
+          PR_NUMBER="${PR_URL##*/}"
+          echo "Pull Request Number: $PR_NUMBER"
+          # Fetch PR details
           PR_DETAILS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
-          BASE_REF=$(echo "$PR_DETAILS" | jq --raw-output .base.ref)
+          BASE_REF=$(echo "$PR_DETAILS" | jq --raw-output '.base.ref')
           echo "::set-output name=base_ref::$BASE_REF"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Conditionally run this step only if it's a push to ollama branch or a PR targeting ollama branch
       - name: Run PR Rules Check for PR Events
