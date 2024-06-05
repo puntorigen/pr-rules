@@ -9,7 +9,7 @@ on:
     types: [created, edited]
 
 env:
-  BRANCH_NAME: ollama
+  BRANCH_NAME: "ollama"
 
 permissions:
   issues: write

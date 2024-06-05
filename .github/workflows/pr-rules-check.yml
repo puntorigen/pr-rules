@@ -9,7 +9,7 @@ on:
     types: [created, edited]
 
 env:
-  BRANCH_NAME: openai
+  BRANCH_NAME: "openai"
 
 permissions:
   issues: write
