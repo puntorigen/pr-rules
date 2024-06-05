@@ -21,6 +21,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Print event.json
+        run: cat $GITHUB_EVENT_PATH
+        
       # For detecting PR branch specific comments, we need to fetch the PR details first
       - name: Fetch Pull Request Details
         if: github.event_name == 'issue_comment'
