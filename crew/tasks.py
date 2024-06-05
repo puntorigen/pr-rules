@@ -36,28 +36,30 @@ class Tasks():
         self.PR = PR
         self.rule = rule
         self.pr_str = dedent(f"""\
-            # PR context details:
-            ## Title: "{self.PR.title}"
-            ## Body: "{self.PR.body}"
+            ### PR context details:
+            **Title:** "{self.PR.title}"
+            **Body:** "{self.PR.body}"
 
-            ### Files diff list of tuples: 
+            ### Files Affected: 
         """)
         for file in self.PR.files_diff:
-            self.pr_str += f"filename:\n{str(file[0])}\n"
-            self.pr_str += f"diff content:\n```{file[1]}```\n"
+            self.pr_str += f"**Filename:** {str(file[0])}\n"
+            self.pr_str += f"**Diff Content:**\n```{file[1]}```\n"
 
     def is_rule_relevant(self, agent):
         return Task(
             description=dedent(f"""\
                 {self.pr_str}
 
-                # Analyze the PR to determine if the rule is relevant to the PR contents.
-                # The rule to be analyzed is:
-                '{self.rule}'
+                ### Rule to be Evaluated:
+                **Rule:** "{self.rule}"
+
+                ### Question:
+                Is the rule "{self.rule}" relevant for analyzing the contents of this PR? Consider the rule's focus on the PR. We are not assessing whether the rule is satisfied, only if it is applicable to the PR provided.
             """),
             output_pydantic=RuleValidity,
             expected_output=dedent("""\
-                A boolean value indicating whether the rule is relevant to the given PR contents."""),
+                A boolean value, true if the rule is relevant, false otherwise."""),
             async_execution=False,
             agent=agent
         )

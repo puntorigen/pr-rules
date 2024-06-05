@@ -20,7 +20,8 @@ def validate_rule(PR: PRSchema, rule: str):
     # kick off the first task to see if we need to prceed with the rest of the tasks
     test_crew = Crew(
         agents=[rule_validator],
-        tasks=[is_rule_relevant]
+        tasks=[is_rule_relevant],
+        verbose=2
     )
     print("Starting Validation Crew")
     is_valid = test_crew.kickoff()
